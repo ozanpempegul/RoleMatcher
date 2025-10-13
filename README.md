@@ -39,7 +39,29 @@ pip install -r requirements.txt
 
 -------------------------------
 
+## Create .env file
+To store your database credentials securely, create a `.env` file in your project's root directory. Add your database information in the following format:
+
+```
+DB_HOST=your_database_host
+DB_PORT=your_database_port
+DB_USER=your_database_user
+DB_PASSWORD=your_database_password
+DB_NAME=your_database_name
+
+API_KEY = "YOUR_HASDATA_API_KEY"
+base_url = "https://api.hasdata.com/scrape/indeed/listing"
+```
+
+Replace each value with your actual database and api details. This file should not be committed to version control; add `.env` to your `.gitignore` file.
+
 ## Database Migrations
+
+To initialize Alembic in your project, run:
+
+```bash
+alembic init alembic
+```
 
 To create a new migration version, run:
 
