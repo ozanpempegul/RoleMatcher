@@ -49,3 +49,4 @@ dist/
 *.swp
 *~
 requirements.txt
+test.py
