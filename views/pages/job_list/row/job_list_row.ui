@@ -20,8 +20,14 @@
 }</string>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
-   <item alignment="Qt::AlignmentFlag::AlignHCenter">
+   <item alignment="Qt::AlignmentFlag::AlignLeft">
     <widget class="QLabel" name="label_id">
+     <property name="minimumSize">
+      <size>
+       <width>40</width>
+       <height>0</height>
+      </size>
+     </property>
      <property name="maximumSize">
       <size>
        <width>40</width>
@@ -40,12 +46,12 @@
     <widget class="QLabel" name="label_site">
      <property name="minimumSize">
       <size>
-       <width>29</width>
+       <width>75</width>
        <height>0</height>
       </size>
      </property>
      <property name="text">
-      <string>site</string>
+      <string>LINKEDIN</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -55,15 +61,21 @@
    <item alignment="Qt::AlignmentFlag::AlignHCenter">
     <widget class="QLabel" name="label_title">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
      <property name="minimumSize">
       <size>
-       <width>150</width>
+       <width>200</width>
        <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>200</width>
+       <height>16777215</height>
       </size>
      </property>
      <property name="text">
@@ -78,7 +90,7 @@
     <widget class="QLabel" name="label_company_name">
      <property name="minimumSize">
       <size>
-       <width>129</width>
+       <width>150</width>
        <height>0</height>
       </size>
      </property>
@@ -98,6 +110,12 @@
        <height>0</height>
       </size>
      </property>
+     <property name="maximumSize">
+      <size>
+       <width>120</width>
+       <height>16777215</height>
+      </size>
+     </property>
      <property name="text">
       <string>location</string>
      </property>
@@ -110,12 +128,12 @@
     <widget class="QLabel" name="label_job_type">
      <property name="minimumSize">
       <size>
-       <width>68</width>
+       <width>75</width>
        <height>0</height>
       </size>
      </property>
      <property name="text">
-      <string>job type</string>
+      <string>fulltime</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -125,15 +143,21 @@
    <item alignment="Qt::AlignmentFlag::AlignHCenter">
     <widget class="QCheckBox" name="checkBox_is_remote">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
        <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
      <property name="minimumSize">
       <size>
-       <width>63</width>
-       <height>0</height>
+       <width>75</width>
+       <height>20</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>75</width>
+       <height>20</height>
       </size>
      </property>
      <property name="layoutDirection">
@@ -148,34 +172,18 @@
     <widget class="QLabel" name="label_job_level">
      <property name="minimumSize">
       <size>
-       <width>100</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="text">
-      <string>job level</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignmentFlag::AlignCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item alignment="Qt::AlignmentFlag::AlignHCenter">
-    <widget class="QLabel" name="label_description">
-     <property name="minimumSize">
-      <size>
-       <width>200</width>
+       <width>120</width>
        <height>0</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
-       <width>200</width>
+       <width>120</width>
        <height>16777215</height>
       </size>
      </property>
      <property name="text">
-      <string>description</string>
+      <string>mid-senior level</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignmentFlag::AlignCenter</set>
@@ -194,6 +202,26 @@
    </item>
    <item>
     <widget class="QToolButton" name="toolButton_open_link">
+     <property name="toolTip">
+      <string>Open Link</string>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(170, 170, 255);</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QToolButton" name="toolButton_remove">
+     <property name="toolTip">
+      <string>Remove</string>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(170, 170, 255);
+background-color: rgb(159, 47, 27);</string>
+     </property>
      <property name="text">
       <string/>
      </property>
