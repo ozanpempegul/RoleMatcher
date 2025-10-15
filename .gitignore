@@ -48,5 +48,4 @@ dist/
 *.bak
 *.swp
 *~
-requirements.txt
 test.py
