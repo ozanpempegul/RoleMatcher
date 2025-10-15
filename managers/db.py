@@ -5,6 +5,7 @@ from sqlalchemy.exc import IntegrityError
 from common.imports.log import *
 import os
 from models.job import Job, Sites
+from PySide6.QtCore import Signal, QObject
 
 DB_NAME = os.getenv("POSTGRES_DB")
 DB_USER = os.getenv("POSTGRES_USER")
@@ -23,10 +24,16 @@ site_map = {
     "google": Sites.GOOGLE
 }
 
-class DBManager:
+# python
+class DBManager(QObject):
+    signal_data_saved = Signal()
+
+
     def __init__(self):
+        super().__init__()
         self.engine = create_engine(SQLALCHEMY_DATABASE_URL, pool_size=10, max_overflow=20)
         self.SessionLocal = sessionmaker(bind=self.engine, autoflush=False, autocommit=False)
+
 
     def save_jobs(self, df):
         logging.info("Saving jobs to the database")
@@ -47,6 +54,7 @@ class DBManager:
                 job_level=row.get("job_level"),
                 description=row.get("description")
             )
+            print("url: ", job.url)
 
             db.add(job)
             try:
@@ -56,6 +64,7 @@ class DBManager:
                 db.rollback()
                 print(f"Skipped job (duplicate or error): {job.url}")
 
+        self.signal_data_saved.emit()
         db.close()
 
     def get_jobs(self, skip: int = 0, limit: int = 100) -> list[Job]:
@@ -78,6 +87,7 @@ class DBManager:
                     _.is_remote = job.is_remote
                     _.job_level = job.job_level
                     _.description = job.description
+                    _.url = job.url
                     result_jobs.append(_)
                 except Exception as e:
                     logging.error(f"Error processing job {job.id}: {e}")
@@ -86,3 +96,21 @@ class DBManager:
         except Exception as e:
             logging.error(f"Error retrieving jobs: {e}")
             return []
+        
+    def remove_job(self, job_id: int):
+        try:
+            logging.info(f"Removing job with ID {job_id} from the database")
+            db = self.SessionLocal()
+            job = db.query(Job).filter(Job.id == job_id).first()
+            if job:
+                db.delete(job)
+                db.commit()
+                print(f"Removed job with ID {job_id}")
+                self.signal_data_saved.emit()
+            else:
+                print(f"No job found with ID {job_id}")
+            db.close()
+        except Exception as e:
+            logging.error(f"Error removing job with ID {job_id}: {e}")
+
+db_manager = DBManager()  # Module-level instance
