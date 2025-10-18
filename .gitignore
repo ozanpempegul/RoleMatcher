@@ -49,3 +49,6 @@ dist/
 *.swp
 *~
 test.py
+
+# project specific
+summaries/

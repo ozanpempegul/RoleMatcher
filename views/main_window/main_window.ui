@@ -90,6 +90,16 @@
         </widget>
        </item>
        <item>
+        <widget class="QToolButton" name="toolButton_show_upload_resume_page">
+         <property name="styleSheet">
+          <string notr="true">font: 11pt &quot;Segoe UI&quot;;</string>
+         </property>
+         <property name="text">
+          <string>Upload Resume</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <spacer name="horizontalSpacer">
          <property name="orientation">
           <enum>Qt::Orientation::Horizontal</enum>
@@ -159,8 +169,12 @@
     </item>
     <item>
      <widget class="QStackedWidget" name="stackedWidget">
+      <property name="currentIndex">
+       <number>2</number>
+      </property>
       <widget class="QWidget" name="page_fetch_jobs"/>
       <widget class="QWidget" name="page_retrieved_jobs"/>
+      <widget class="QWidget" name="page_upload_resume"/>
      </widget>
     </item>
    </layout>
