@@ -248,7 +248,7 @@
       <item>
        <widget class="QToolButton" name="toolButton_refresh">
         <property name="toolTip">
-         <string>Open Link</string>
+         <string>Refresh List</string>
         </property>
         <property name="styleSheet">
          <string notr="true">background-color: rgb(85, 255, 255);</string>

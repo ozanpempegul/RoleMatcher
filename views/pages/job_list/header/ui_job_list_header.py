@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'job_list_headerQNovbV.ui'
+## Form generated from reading UI file 'job_list_headerJjFqvn.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.10.0
 ##
@@ -171,7 +171,7 @@ class Ui_Frame(object):
         self.label.setText(QCoreApplication.translate("Frame", u"Remote", None))
         self.label_job_level.setText(QCoreApplication.translate("Frame", u"job level", None))
 #if QT_CONFIG(tooltip)
-        self.toolButton_refresh.setToolTip(QCoreApplication.translate("Frame", u"Open Link", None))
+        self.toolButton_refresh.setToolTip(QCoreApplication.translate("Frame", u"Refresh List", None))
 #endif // QT_CONFIG(tooltip)
         self.toolButton_refresh.setText("")
     # retranslateUi
