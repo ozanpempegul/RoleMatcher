@@ -9,6 +9,7 @@ class Sites(enum.IntEnum):
     ZIP_RECRUITER = 2
     GOOGLE = 3
 
+
 class Job(Base):
     __tablename__ = "jobs"
 

@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from typing import List, Optional
 
+
 @dataclass
 class JobScraperConfig:
     site_names: List[str] = field(default_factory=lambda: ["linkedin"])

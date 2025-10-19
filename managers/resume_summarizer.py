@@ -8,16 +8,17 @@ from openai import OpenAI
 
 
 class ResumeSummarizer:
-
     def __init__(self, model: str | None = "gpt-4"):
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         self.model = model or os.getenv("OPENAI_MODEL", "gpt-4")
-        self.use_responses = ("-chat" not in self.model)
+        self.use_responses = "-chat" not in self.model
 
     def start_pipeline(self, resume_path: str) -> dict:
         text = self.extract_docx_text(resume_path)
         redacted = self.redact_pii(text)
-        summary = self.summarize_resume(redacted, source_id=os.path.basename(resume_path))
+        summary = self.summarize_resume(
+            redacted, source_id=os.path.basename(resume_path)
+        )
         print("summary keys:", list(summary.keys()))
         return summary
 
@@ -27,8 +28,14 @@ class ResumeSummarizer:
 
     def redact_pii(self, text: str) -> str:
         # basic redaction: emails, phones
-        text = re.sub(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}", "[REDACTED_EMAIL]", text)
-        text = re.sub(r"\b(\+?\d{1,3}[-.\s]?)?(\(?\d{2,4}\)?[-.\s]?){1,3}\d{2,4}\b", "[REDACTED_PHONE]", text)
+        text = re.sub(
+            r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}", "[REDACTED_EMAIL]", text
+        )
+        text = re.sub(
+            r"\b(\+?\d{1,3}[-.\s]?)?(\(?\d{2,4}\)?[-.\s]?){1,3}\d{2,4}\b",
+            "[REDACTED_PHONE]",
+            text,
+        )
         return text
 
     def build_prompt(self, resume_text: str, source_id: str) -> str:
@@ -112,7 +119,7 @@ Return only the JSON object and nothing else.
                 max_tokens=1500,
                 top_p=1,
                 frequency_penalty=0,
-                presence_penalty=0
+                presence_penalty=0,
             )
             content = response.choices[0].message.content
         else:
@@ -125,7 +132,7 @@ Return only the JSON object and nothing else.
                 frequency_penalty=0,
                 presence_penalty=0,
                 n=1,
-                stop=None
+                stop=None,
             )
             content = response.choices[0].text
 
@@ -138,7 +145,9 @@ Return only the JSON object and nothing else.
 
             # save the finalized summary JSON before returning
             summary_json_str = json.dumps(summary, ensure_ascii=False)
-            saved_path = self.save_string_as_json(summary_json_str, filename=f"{summary['meta']['id']}.json")
+            saved_path = self.save_string_as_json(
+                summary_json_str, filename=f"{summary['meta']['id']}.json"
+            )
             print("Saved summary to:", saved_path)
 
             return summary
@@ -146,15 +155,19 @@ Return only the JSON object and nothing else.
             print("Failed to parse JSON from model response:", e)
             print("Response content:", content)
             # save the raw model response for inspection
-            saved_path = self.save_string_as_json(content, filename=f"failed_{uuid.uuid4()}.json")
+            saved_path = self.save_string_as_json(
+                content, filename=f"failed_{uuid.uuid4()}.json"
+            )
             print("Saved raw response to:", saved_path)
             return {"error": "Failed to parse JSON from model response."}
+
 
 resume_summarizer = ResumeSummarizer()  # Module-level instance
 
 
 if __name__ == "__main__":
     from dotenv import load_dotenv
+
     load_dotenv()
     api_key = os.getenv("OPENAI_API_KEY")
     client = OpenAI(api_key=api_key)

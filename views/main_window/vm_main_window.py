@@ -1,11 +1,10 @@
-from .ui_main_window import *
+from .ui_main_window import*
 from views.pages.job_list.job_list.vm_job_list_table import JobListTable
 from views.pages.fetch_jobs.fetch_jobs.vm_main import JobFetchMainFrame
 from views.pages.upload_resume.upload_resume.vm_upload_resume import UploadResumeFrame
 
 
 class MainWindow(QMainWindow):
-
     def __init__(self):
         super().__init__()
         self.ui = Ui_MainWindow()
@@ -40,9 +39,15 @@ class MainWindow(QMainWindow):
         layout.addWidget(upload_resume_frame)
 
     def _init_event_handlers(self):
-        self.ui.toolButton_show_fetch_jobs_page.clicked.connect(self.on_fetch_jobs_clicked)
-        self.ui.toolButton_show_retrieved_jobs_page.clicked.connect(self.on_retrieved_jobs_clicked)
-        self.ui.toolButton_show_upload_resume_page.clicked.connect(self.on_upload_resume_clicked)
+        self.ui.toolButton_show_fetch_jobs_page.clicked.connect(
+            self.on_fetch_jobs_clicked
+        )
+        self.ui.toolButton_show_retrieved_jobs_page.clicked.connect(
+            self.on_retrieved_jobs_clicked
+        )
+        self.ui.toolButton_show_upload_resume_page.clicked.connect(
+            self.on_upload_resume_clicked
+        )
 
     def _init_defaults(self):
         self.on_fetch_jobs_clicked()
