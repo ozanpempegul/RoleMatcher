@@ -1,9 +1,12 @@
 from .ui_upload_resume import *
 from PySide6.QtWidgets import QFileDialog
 from managers.resume_summarizer import resume_summarizer
+from PySide6.QtCore import Signal
 
 
-class UploadResumeFrame(QWidget):
+class UploadResumeFrame(QFrame):
+
+    signal_cv_uploaded = Signal(str)
 
     def __init__(self):
         super().__init__()
@@ -13,10 +16,10 @@ class UploadResumeFrame(QWidget):
         self._init_event_handlers()
 
     def _init_event_handlers(self):
+        resume_summarizer.signal_resume_summarized.connect(self.on_resume_summarized)
         self.ui.frame_drop_area.dragEnterEvent = self.on_drag_enter
         self.ui.frame_drop_area.dropEvent = self.on_drop
         self.ui.frame_drop_area.mousePressEvent = self.on_mouse_press
-        self.ui.toolButton_upload_cv.clicked.connect(self.on_upload_cv_clicked)
 
     def on_drag_enter(self, event):
         if event.mimeData().hasUrls():
@@ -40,9 +43,8 @@ class UploadResumeFrame(QWidget):
         )
         if self.file_path:
             print(f"Selected CV file: {self.file_path}")
-            # Add code here to handle the uploaded file (e.g., save or process it)
-
-    def on_upload_cv_clicked(self):
-        if self.file_path:
-            print("Upload CV button clicked")
             resume_summarizer.start_pipeline(self.file_path)
+
+    def on_resume_summarized(self, summary_path):
+        print("Resume processing completed: ", summary_path)
+        self.signal_cv_uploaded.emit(summary_path)

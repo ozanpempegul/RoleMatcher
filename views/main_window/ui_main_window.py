@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'main_windowSvknZW.ui'
+## Form generated from reading UI file 'main_windowYmYWZM.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.10.0
 ##
@@ -53,11 +53,11 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout.addWidget(self.toolButton_show_retrieved_jobs_page)
 
-        self.toolButton_show_upload_resume_page = QToolButton(self.frame)
-        self.toolButton_show_upload_resume_page.setObjectName(u"toolButton_show_upload_resume_page")
-        self.toolButton_show_upload_resume_page.setStyleSheet(u"font: 11pt \"Segoe UI\";")
+        self.toolButton_show_resume_page = QToolButton(self.frame)
+        self.toolButton_show_resume_page.setObjectName(u"toolButton_show_resume_page")
+        self.toolButton_show_resume_page.setStyleSheet(u"font: 11pt \"Segoe UI\";")
 
-        self.horizontalLayout.addWidget(self.toolButton_show_upload_resume_page)
+        self.horizontalLayout.addWidget(self.toolButton_show_resume_page)
 
         self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
@@ -98,9 +98,9 @@ class Ui_MainWindow(object):
         self.page_retrieved_jobs = QWidget()
         self.page_retrieved_jobs.setObjectName(u"page_retrieved_jobs")
         self.stackedWidget.addWidget(self.page_retrieved_jobs)
-        self.page_upload_resume = QWidget()
-        self.page_upload_resume.setObjectName(u"page_upload_resume")
-        self.stackedWidget.addWidget(self.page_upload_resume)
+        self.page_resume = QWidget()
+        self.page_resume.setObjectName(u"page_resume")
+        self.stackedWidget.addWidget(self.page_resume)
 
         self.verticalLayout.addWidget(self.stackedWidget)
 
@@ -121,7 +121,7 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
         self.toolButton_show_fetch_jobs_page.setText(QCoreApplication.translate("MainWindow", u"Fetch Jobs", None))
         self.toolButton_show_retrieved_jobs_page.setText(QCoreApplication.translate("MainWindow", u"Retrieved Jobs", None))
-        self.toolButton_show_upload_resume_page.setText(QCoreApplication.translate("MainWindow", u"Upload Resume", None))
+        self.toolButton_show_resume_page.setText(QCoreApplication.translate("MainWindow", u"Resume", None))
 #if QT_CONFIG(tooltip)
         self.toolButton_settings.setToolTip(QCoreApplication.translate("MainWindow", u"Settings", None))
 #endif // QT_CONFIG(tooltip)

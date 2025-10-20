@@ -5,10 +5,17 @@ import re
 import json
 import uuid
 from openai import OpenAI
+from datetime import datetime
+from PySide6.QtCore import Signal, QObject
 
 
-class ResumeSummarizer:
+
+class ResumeSummarizer(QObject):
+
+    signal_resume_summarized = Signal(str)
+
     def __init__(self, model: str | None = "gpt-4"):
+        super().__init__()
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         self.model = model or os.getenv("OPENAI_MODEL", "gpt-4")
         self.use_responses = "-chat" not in self.model
@@ -145,11 +152,14 @@ Return only the JSON object and nothing else.
 
             # save the finalized summary JSON before returning
             summary_json_str = json.dumps(summary, ensure_ascii=False)
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            filename = f"{timestamp}.json"
             saved_path = self.save_string_as_json(
-                summary_json_str, filename=f"{summary['meta']['id']}.json"
+                summary_json_str, filename=filename
             )
             print("Saved summary to:", saved_path)
 
+            self.signal_resume_summarized.emit(saved_path)
             return summary
         except json.JSONDecodeError as e:
             print("Failed to parse JSON from model response:", e)

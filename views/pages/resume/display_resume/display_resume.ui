@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Frame</class>
+ <widget class="QFrame" name="Frame">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>569</width>
+    <height>430</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Frame</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QScrollArea" name="scrollArea">
+     <property name="widgetResizable">
+      <bool>true</bool>
+     </property>
+     <widget class="QWidget" name="scrollContent">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>549</width>
+        <height>410</height>
+       </rect>
+      </property>
+      <layout class="QVBoxLayout" name="contentLayout">
+       <item>
+        <widget class="QGroupBox" name="groupMeta">
+         <property name="title">
+          <string>Meta</string>
+         </property>
+         <layout class="QVBoxLayout" name="metaLayout"/>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupProfile">
+         <property name="title">
+          <string>Profile</string>
+         </property>
+         <layout class="QVBoxLayout" name="profileLayout"/>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupSkills">
+         <property name="title">
+          <string>Skills</string>
+         </property>
+         <layout class="QVBoxLayout" name="skillsLayout"/>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupEducation">
+         <property name="title">
+          <string>Education</string>
+         </property>
+         <layout class="QVBoxLayout" name="educationLayout"/>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupExperience">
+         <property name="title">
+          <string>Experience</string>
+         </property>
+         <layout class="QVBoxLayout" name="experienceLayout"/>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupProjects">
+         <property name="title">
+          <string>Projects</string>
+         </property>
+         <layout class="QVBoxLayout" name="projectsLayout"/>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Orientation::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QToolButton" name="toolButton_remove_cv">
+         <property name="minimumSize">
+          <size>
+           <width>75</width>
+           <height>35</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(207, 19, 19);
+color: rgb(255, 255, 255);</string>
+         </property>
+         <property name="text">
+          <string>Remove</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

@@ -90,12 +90,12 @@
         </widget>
        </item>
        <item>
-        <widget class="QToolButton" name="toolButton_show_upload_resume_page">
+        <widget class="QToolButton" name="toolButton_show_resume_page">
          <property name="styleSheet">
           <string notr="true">font: 11pt &quot;Segoe UI&quot;;</string>
          </property>
          <property name="text">
-          <string>Upload Resume</string>
+          <string>Resume</string>
          </property>
         </widget>
        </item>
@@ -174,7 +174,7 @@
       </property>
       <widget class="QWidget" name="page_fetch_jobs"/>
       <widget class="QWidget" name="page_retrieved_jobs"/>
-      <widget class="QWidget" name="page_upload_resume"/>
+      <widget class="QWidget" name="page_resume"/>
      </widget>
     </item>
    </layout>
