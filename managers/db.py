@@ -6,16 +6,44 @@ from common.imports.log import *
 import os
 from models.job import Job, Sites
 from PySide6.QtCore import Signal, QObject
+from pathlib import Path
 
-DB_NAME = os.getenv("POSTGRES_DB")
-DB_USER = os.getenv("POSTGRES_USER")
-DB_PASSWORD = os.getenv("POSTGRES_PASSWORD")
-DB_HOST = os.getenv("POSTGRES_HOST")
-DB_PORT = os.getenv("POSTGRES_PORT")
 
-SQLALCHEMY_DATABASE_URL = f"postgresql+psycopg://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
+USE_SQLITE_FLAG = os.getenv("USE_SQLITE", "False").lower() in ("true")
+SQLITE_DB_PATH = os.getenv("SQLITE_DB_PATH", "./job_alerts.db")
+POSTGRES_CONFIG_PRESENT = all(os.getenv(k) for k in ("POSTGRES_DB","POSTGRES_USER","POSTGRES_PASSWORD","POSTGRES_HOST","POSTGRES_PORT"))
+
+def _choose_db_url():
+    if USE_SQLITE_FLAG or not POSTGRES_CONFIG_PRESENT:
+        sqlite_file = Path(SQLITE_DB_PATH).expanduser().resolve()
+        return f"sqlite:///{sqlite_file}", True
+    # fallback to postgres
+    db = os.getenv("POSTGRES_DB")
+    user = os.getenv("POSTGRES_USER")
+    pw = os.getenv("POSTGRES_PASSWORD")
+    host = os.getenv("POSTGRES_HOST")
+    port = os.getenv("POSTGRES_PORT")
+    return f"postgresql+psycopg://{user}:{pw}@{host}:{port}/{db}", False
+
+
+SQLALCHEMY_DATABASE_URL, _USE_SQLITE = _choose_db_url()
 Base = declarative_base()
+
+
+def _make_engine(**engine_kwargs):
+    """Create SQLAlchemy engine. Accepts optional engine kwargs (pool_size, max_overflow, etc.)
+    and ensures sqlite gets connect_args={'check_same_thread': False}."""
+    if _USE_SQLITE:
+        connect_args = {"check_same_thread": False}
+        # merge any provided connect_args
+        if "connect_args" in engine_kwargs:
+            user_ca = engine_kwargs.pop("connect_args")
+            if isinstance(user_ca, dict):
+                connect_args.update(user_ca)
+        return create_engine(SQLALCHEMY_DATABASE_URL, connect_args=connect_args, **engine_kwargs)
+    return create_engine(SQLALCHEMY_DATABASE_URL, **engine_kwargs)
+
 
 site_map = {
     "indeed": Sites.INDEED,
@@ -31,7 +59,8 @@ class DBManager(QObject):
 
     def __init__(self):
         super().__init__()
-        self.engine = create_engine(SQLALCHEMY_DATABASE_URL, pool_size=10, max_overflow=20)
+        # pass engine options as kwargs to _make_engine
+        self.engine = _make_engine(pool_size=10, max_overflow=20)
         self.SessionLocal = sessionmaker(bind=self.engine, autoflush=False, autocommit=False)
 
 

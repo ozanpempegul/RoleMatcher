@@ -49,6 +49,9 @@ DB_USER=your_database_user
 DB_PASSWORD=your_database_password
 DB_NAME=your_database_name
 
+USE_SQLITE=True
+SQLITE_DB_PATH=./job_alerts.db
+
 API_KEY = "YOUR_HASDATA_API_KEY"
 base_url = "https://api.hasdata.com/scrape/indeed/listing"
 ```

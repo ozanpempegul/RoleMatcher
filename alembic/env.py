@@ -10,21 +10,26 @@ from models import Base
 # Load .env variables
 load_dotenv()
 
-DB_USER = os.getenv("POSTGRES_USER")
-DB_PASS = os.getenv("POSTGRES_PASSWORD")
-DB_HOST = os.getenv("POSTGRES_HOST", "localhost")
-DB_PORT = os.getenv("POSTGRES_PORT", "5432")
-DB_NAME = os.getenv("POSTGRES_DB")
+# Prefer explicit full URL; otherwise choose sqlite if requested, else postgres
+use_sqlite = os.getenv("USE_SQLITE", "").strip().lower() in ("true")
+sqlite_path = os.getenv("SQLITE_DB_PATH", "").strip()
+if use_sqlite or sqlite_path:
+    sqlite_file = sqlite_path or "./job_alerts.db"
+    sqlalchemy_url = f"sqlite:///{os.path.abspath(sqlite_file)}"
+else:
+    DB_USER = os.getenv("POSTGRES_USER")
+    DB_PASS = os.getenv("POSTGRES_PASSWORD")
+    DB_HOST = os.getenv("POSTGRES_HOST", "localhost")
+    DB_PORT = os.getenv("POSTGRES_PORT", "5432")
+    DB_NAME = os.getenv("POSTGRES_DB")
+    sqlalchemy_url = f"postgresql+psycopg://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 # Set SQLAlchemy URL dynamically
 config = context.config
-config.set_main_option(
-    "sqlalchemy.url",
-    f"postgresql+psycopg://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-)
+config.set_main_option("sqlalchemy.url", sqlalchemy_url)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

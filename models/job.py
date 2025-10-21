@@ -1,20 +1,21 @@
-from sqlalchemy import Column, Integer, String, Boolean, Enum
+from sqlalchemy import Column, Integer, String, Boolean, Enum as SAEnum
 from .base import Base
 import enum
 
 
-class Sites(enum.IntEnum):
-    INDEED = 0
-    LINKEDIN = 1
-    ZIP_RECRUITER = 2
-    GOOGLE = 3
+class Sites(enum.Enum):
+    INDEED = "INDEED"
+    LINKEDIN = "LINKEDIN"
+    ZIP_RECRUITER = "ZIP_RECRUITER"
+    GOOGLE = "GOOGLE"
 
 
 class Job(Base):
     __tablename__ = "jobs"
 
     id = Column(Integer, primary_key=True, index=True)
-    site = Column(Enum(Sites), nullable=False)
+    # store enum as string for SQLite/postgres portability
+    site = Column(SAEnum(Sites, native_enum=False, length=50), nullable=False)
     url = Column(String, nullable=False, unique=True)
     title = Column(String, nullable=False)
     company_name = Column(String, nullable=False)
