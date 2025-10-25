@@ -18,7 +18,6 @@ class ResumeSummarizer(QObject):
         super().__init__()
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         self.model = model or os.getenv("OPENAI_MODEL", "gpt-4")
-        self.use_responses = "-chat" not in self.model
 
     def start_pipeline(self, resume_path: str) -> dict:
         text = self.extract_docx_text(resume_path)
@@ -118,30 +117,19 @@ Return only the JSON object and nothing else.
     def summarize_resume(self, resume_text: str, source_id: str) -> dict:
         prompt = self.build_prompt(resume_text, source_id)
         print("Using model:", self.model)
-        if self.use_responses:
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=[{"role": "user", "content": prompt}],
-                temperature=0.0,
-                max_tokens=1500,
-                top_p=1,
-                frequency_penalty=0,
-                presence_penalty=0,
-            )
-            content = response.choices[0].message.content
-        else:
-            response = self.client.completions.create(
-                model=self.model,
-                prompt=prompt,
-                temperature=0.0,
-                max_tokens=1500,
-                top_p=1,
-                frequency_penalty=0,
-                presence_penalty=0,
-                n=1,
-                stop=None,
-            )
-            content = response.choices[0].text
+        response = self.client.chat.completions.create(
+            model=self.model,
+            messages=[
+                {"role": "system", "content": "You are a structured resume parser. Extract factual data only."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.0,
+            max_tokens=1500,
+            top_p=1,
+            frequency_penalty=0,
+            presence_penalty=0,
+        )
+        content = response.choices[0].message.content
 
         try:
             summary = json.loads(content)
@@ -152,7 +140,7 @@ Return only the JSON object and nothing else.
 
             # save the finalized summary JSON before returning
             summary_json_str = json.dumps(summary, ensure_ascii=False)
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
             filename = f"{timestamp}.json"
             saved_path = self.save_string_as_json(
                 summary_json_str, filename=filename
