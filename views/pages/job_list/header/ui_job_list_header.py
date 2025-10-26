@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'job_list_headerJjFqvn.ui'
+## Form generated from reading UI file 'job_list_headermynfnO.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.10.0
 ##
@@ -22,7 +22,7 @@ class Ui_Frame(object):
     def setupUi(self, Frame):
         if not Frame.objectName():
             Frame.setObjectName(u"Frame")
-        Frame.resize(994, 87)
+        Frame.resize(978, 82)
         Frame.setStyleSheet(u"QFrame {\n"
 "    font-family: \"Segoe UI\";\n"
 "    font-size: 14pt;\n"
@@ -129,11 +129,21 @@ class Ui_Frame(object):
 
         self.horizontalLayout_2.addWidget(self.toolButton_refresh)
 
-        self.frame_button_placeholder_2 = QFrame(self.frame)
-        self.frame_button_placeholder_2.setObjectName(u"frame_button_placeholder_2")
+        self.frame_button_placeholder_4 = QFrame(self.frame)
+        self.frame_button_placeholder_4.setObjectName(u"frame_button_placeholder_4")
         sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         sizePolicy3.setHorizontalStretch(0)
         sizePolicy3.setVerticalStretch(0)
+        sizePolicy3.setHeightForWidth(self.frame_button_placeholder_4.sizePolicy().hasHeightForWidth())
+        self.frame_button_placeholder_4.setSizePolicy(sizePolicy3)
+        self.frame_button_placeholder_4.setMinimumSize(QSize(23, 23))
+        self.frame_button_placeholder_4.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame_button_placeholder_4.setFrameShadow(QFrame.Shadow.Raised)
+
+        self.horizontalLayout_2.addWidget(self.frame_button_placeholder_4)
+
+        self.frame_button_placeholder_2 = QFrame(self.frame)
+        self.frame_button_placeholder_2.setObjectName(u"frame_button_placeholder_2")
         sizePolicy3.setHeightForWidth(self.frame_button_placeholder_2.sizePolicy().hasHeightForWidth())
         self.frame_button_placeholder_2.setSizePolicy(sizePolicy3)
         self.frame_button_placeholder_2.setMinimumSize(QSize(23, 23))

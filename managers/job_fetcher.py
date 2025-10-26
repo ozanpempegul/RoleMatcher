@@ -21,7 +21,6 @@ class JobFetcher:
             hours_old=config.hours_old,
             linkedin_fetch_description=config.linkedin_fetch_description,
         )
-        print(f"Fetched {len(jobs)} jobs using config: {config}")
         return jobs
 
 

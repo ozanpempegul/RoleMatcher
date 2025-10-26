@@ -41,11 +41,6 @@ class DisplayResumeFrame(QFrame):
         layout.addLayout(h)
 
 
-    def set_file_path(self, path):
-        self.file_path = path
-        self.load_json_to_form(path)
-
-
     def populate_static_fields(self, layout, data):
         for key, value in data.items():
             if isinstance(value, list):
@@ -89,7 +84,7 @@ class DisplayResumeFrame(QFrame):
                 self.clear_layout(child.layout())
 
 
-    def load_json_to_form(self, path):
+    def load_json_to_form(self, data):
         try:
             self.clear_layout(self.ui.metaLayout)
             self.clear_layout(self.ui.profileLayout)
@@ -100,17 +95,6 @@ class DisplayResumeFrame(QFrame):
         except Exception as e:
             logging.error(f"Error clearing layout: {e}")
 
-        time.sleep(0.1)  # small delay to ensure UI updates
-        print("path:", path)
-
-        if not path:
-            return
-
-        try:
-            data = json.loads(Path(path).read_text(encoding="utf-8-sig"))
-        except Exception as e:
-            # Surface a clear error for debugging / UI logging
-            logging.error(f"Unable to load resume summary JSON: {e}")
 
         # Fill sections
         if "meta" in data:

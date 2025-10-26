@@ -83,15 +83,12 @@ class DBManager(QObject):
                 job_level=row.get("job_level"),
                 description=row.get("description")
             )
-            print("url: ", job.url)
 
             db.add(job)
             try:
                 db.commit()
-                print(f"Saved job: {job.title} ({job.url})")
             except IntegrityError:
                 db.rollback()
-                print(f"Skipped job (duplicate or error): {job.url}")
 
         self.signal_data_saved.emit()
         db.close()
@@ -102,7 +99,6 @@ class DBManager(QObject):
             db = self.SessionLocal()
             jobs = db.query(Job).offset(skip).limit(limit).all()
             db.close()
-            print(f"Retrieved {len(jobs)} jobs from the database")
             result_jobs = []
             for job in jobs:
                 try:
@@ -134,10 +130,7 @@ class DBManager(QObject):
             if job:
                 db.delete(job)
                 db.commit()
-                print(f"Removed job with ID {job_id}")
                 self.signal_data_saved.emit()
-            else:
-                print(f"No job found with ID {job_id}")
             db.close()
         except Exception as e:
             logging.error(f"Error removing job with ID {job_id}: {e}")

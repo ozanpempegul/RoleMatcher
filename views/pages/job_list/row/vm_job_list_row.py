@@ -2,6 +2,10 @@ from .ui_job_list_row import *
 from models.job import Job, Sites
 from managers.db import db_manager
 import webbrowser
+from managers.resume_tailor import resume_tailor
+from managers.resume_summarizer import resume_summarizer
+
+
 
 class JobListRow(QFrame):
 
@@ -15,8 +19,10 @@ class JobListRow(QFrame):
     def _init_event_handlers(self):
         self.ui.toolButton_open_link.clicked.connect(self._on_open_link_clicked)
         self.ui.toolButton_remove.clicked.connect(self._on_remove_clicked)
+        self.ui.toolButton_generate_tailored_resume.clicked.connect(self._on_generate_tailored_resume_clicked)
 
     def apply_values(self, job: Job, idx: int):
+        self.job = job
         self.id = job.id # Store job ID for db reference
         self.ui.label_id.setText(str(idx))
         for site in Sites:
@@ -30,12 +36,17 @@ class JobListRow(QFrame):
         self.ui.checkBox_is_remote.setChecked(job.is_remote)
         self.ui.label_job_level.setText(job.job_level)
         self.link = job.url
-        # self.ui.label_description.setText(job.description)
+        self.job_description = job.description
 
     def _on_open_link_clicked(self):
-        print("Open link clicked:", self.link)
         if self.link:
             webbrowser.open(self.link)
 
     def _on_remove_clicked(self):
         db_manager.remove_job(self.id)
+
+    def _on_generate_tailored_resume_clicked(self):
+        cv_text = resume_summarizer.get_data_from_summary_json()
+        resume_tailor._start_pipeline(self.job, cv_text)
+        # Call the resume tailoring function here with the job details
+

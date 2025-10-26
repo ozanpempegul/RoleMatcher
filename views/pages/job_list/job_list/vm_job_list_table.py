@@ -53,6 +53,5 @@ class JobListTable(QFrame):
         self._init_header_frame()
         # get jobs
         retrieved_jobs = db_manager.get_jobs()
-        print(f"Retrieved {len(retrieved_jobs)} jobs from the database")
         for idx, job in enumerate(retrieved_jobs):
             self.add_row(job, idx)

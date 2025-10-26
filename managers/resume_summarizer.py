@@ -7,17 +7,21 @@ import uuid
 from openai import OpenAI
 from datetime import datetime
 from PySide6.QtCore import Signal, QObject
+from pathlib import Path
+from common.imports.log import*
 
 
 
 class ResumeSummarizer(QObject):
 
-    signal_resume_summarized = Signal(str)
+    signal_resume_summarized = Signal(dict)
 
     def __init__(self, model: str | None = "gpt-4"):
         super().__init__()
         self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         self.model = model or os.getenv("OPENAI_MODEL", "gpt-4")
+        self.get_latest_summary_json()
+
 
     def start_pipeline(self, resume_path: str) -> dict:
         text = self.extract_docx_text(resume_path)
@@ -25,12 +29,13 @@ class ResumeSummarizer(QObject):
         summary = self.summarize_resume(
             redacted, source_id=os.path.basename(resume_path)
         )
-        print("summary keys:", list(summary.keys()))
         return summary
+
 
     def extract_docx_text(self, path: str) -> str:
         doc = Document(path)
         return "\n".join(p.text for p in doc.paragraphs if p.text and p.text.strip())
+
 
     def redact_pii(self, text: str) -> str:
         # basic redaction: emails, phones
@@ -43,6 +48,7 @@ class ResumeSummarizer(QObject):
             text,
         )
         return text
+
 
     def build_prompt(self, resume_text: str, source_id: str) -> str:
         # Schema-only prompt: no job description included
@@ -92,6 +98,7 @@ Return only the JSON object and nothing else.
         prompt = f"{schema}\n\nResume (redacted, source_id={source_id}):\n{snippet}\n\nReturn only the JSON object."
         return prompt
 
+
     def save_string_as_json(self, content: str, filename: str | None = None) -> str:
         """Save a string as JSON to the summaries directory. If content is not valid JSON,
         it will be saved under {"raw": <content>}.
@@ -114,9 +121,9 @@ Return only the JSON object and nothing else.
 
         return path
 
+
     def summarize_resume(self, resume_text: str, source_id: str) -> dict:
         prompt = self.build_prompt(resume_text, source_id)
-        print("Using model:", self.model)
         response = self.client.chat.completions.create(
             model=self.model,
             messages=[
@@ -145,19 +152,68 @@ Return only the JSON object and nothing else.
             saved_path = self.save_string_as_json(
                 summary_json_str, filename=filename
             )
-            print("Saved summary to:", saved_path)
-
-            self.signal_resume_summarized.emit(saved_path)
+            self.get_latest_summary_json()
             return summary
         except json.JSONDecodeError as e:
-            print("Failed to parse JSON from model response:", e)
-            print("Response content:", content)
             # save the raw model response for inspection
             saved_path = self.save_string_as_json(
                 content, filename=f"failed_{uuid.uuid4()}.json"
             )
-            print("Saved raw response to:", saved_path)
             return {"error": "Failed to parse JSON from model response."}
+
+
+    def get_latest_summary_json(self):
+        """
+        Look for a 'summaries' directory and return the latest .json file by filename.
+        Search order:
+         - current working directory and its parents
+         - this module's directory and its parents
+        Returns None if not found or no json files exist.
+        """
+        # Build search roots: cwd first (since you run the project there), then its parents,
+        # then the module directory and its parents as a fallback.
+        cwd = Path.cwd()
+        module_dir = Path(__file__).resolve().parent
+
+        search_roots = []
+        for p in [cwd, *cwd.parents, module_dir, *module_dir.parents]:
+            if p not in search_roots:
+                search_roots.append(p)
+
+        for root in search_roots:
+            summaries_dir = root / "summaries"
+            if summaries_dir.is_dir():
+                json_files = [f for f in summaries_dir.iterdir() if f.is_file() and f.suffix.lower() == ".json"]
+                if not json_files:
+                    return None
+                json_files.sort(key=lambda p: p.name)
+                self.last_summary_path = str(json_files[-1])
+                self.get_data_from_summary_json()
+                return self.last_summary_path
+
+        return None
+    
+
+    def get_data_from_summary_json(self) -> dict | None:
+        """
+        Load and return the JSON data from the given summary file path.
+        Returns None if loading/parsing fails.
+        """
+        try:
+            if not self.last_summary_path:
+                return None
+
+            try:
+                data = json.loads(Path(self.last_summary_path).read_text(encoding="utf-8-sig"))
+            except Exception as e:
+                # Surface a clear error for debugging / UI logging
+                logging.error(f"Unable to load resume summary JSON: {e}")
+                return None
+            
+            self.signal_resume_summarized.emit(data)
+            return data
+        except Exception as e:
+            return None
 
 
 resume_summarizer = ResumeSummarizer()  # Module-level instance

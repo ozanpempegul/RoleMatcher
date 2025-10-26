@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'job_list_rowjNneJv.ui'
+## Form generated from reading UI file 'job_list_rowsZAyuk.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.10.0
 ##
@@ -22,7 +22,7 @@ class Ui_Frame(object):
     def setupUi(self, Frame):
         if not Frame.objectName():
             Frame.setObjectName(u"Frame")
-        Frame.resize(976, 85)
+        Frame.resize(1011, 85)
         Frame.setStyleSheet(u"QFrame {\n"
 "    font-family: \"Segoe UI\";\n"
 "    font-size: 12pt;\n"
@@ -108,6 +108,12 @@ class Ui_Frame(object):
 
         self.horizontalLayout.addWidget(self.line)
 
+        self.toolButton_generate_tailored_resume = QToolButton(Frame)
+        self.toolButton_generate_tailored_resume.setObjectName(u"toolButton_generate_tailored_resume")
+        self.toolButton_generate_tailored_resume.setStyleSheet(u"background-color: rgb(85, 170, 0);")
+
+        self.horizontalLayout.addWidget(self.toolButton_generate_tailored_resume)
+
         self.toolButton_open_link = QToolButton(Frame)
         self.toolButton_open_link.setObjectName(u"toolButton_open_link")
         self.toolButton_open_link.setStyleSheet(u"background-color: rgb(170, 170, 255);")
@@ -137,6 +143,10 @@ class Ui_Frame(object):
         self.label_job_type.setText(QCoreApplication.translate("Frame", u"fulltime", None))
         self.checkBox_is_remote.setText("")
         self.label_job_level.setText(QCoreApplication.translate("Frame", u"mid-senior level", None))
+#if QT_CONFIG(tooltip)
+        self.toolButton_generate_tailored_resume.setToolTip(QCoreApplication.translate("Frame", u"tailor resume", None))
+#endif // QT_CONFIG(tooltip)
+        self.toolButton_generate_tailored_resume.setText("")
 #if QT_CONFIG(tooltip)
         self.toolButton_open_link.setToolTip(QCoreApplication.translate("Frame", u"Open Link", None))
 #endif // QT_CONFIG(tooltip)
