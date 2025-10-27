@@ -201,6 +201,19 @@
     </widget>
    </item>
    <item>
+    <widget class="QToolButton" name="toolButton_generate_cover_letter">
+     <property name="toolTip">
+      <string>generate cover letter</string>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(255, 0, 255);</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QToolButton" name="toolButton_generate_tailored_resume">
      <property name="toolTip">
       <string>tailor resume</string>

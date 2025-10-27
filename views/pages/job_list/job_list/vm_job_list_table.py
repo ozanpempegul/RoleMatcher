@@ -6,7 +6,6 @@ from managers.db import db_manager
 
 
 class JobListTable(QFrame):
-    
     def __init__(self):
         super().__init__()
         self.ui = Ui_Frame()
@@ -15,11 +14,14 @@ class JobListTable(QFrame):
         self._init_ui()
         self._init_event_handlers()
 
+
     def _init_variables(self):
         self.header = JobListHeader()
 
+
     def _init_ui(self):
         self._init_header_frame()
+
 
     def _init_header_frame(self):
         layout = self.ui.frame_job_list_table.layout()
@@ -30,14 +32,17 @@ class JobListTable(QFrame):
         self.header.ui.toolButton_refresh.clicked.connect(self.retrieve_jobs)
         layout.addWidget(self.header)
 
+
     def _init_event_handlers(self):
         db_manager.signal_data_saved.connect(self.retrieve_jobs)
         
+
     def add_row(self, job: Job, idx: int):
         table_layout = self.ui.frame_job_list_table.layout()
         row = JobListRow()
         row.apply_values(job, idx)
         table_layout.addWidget(row)
+
 
     def clear_rows(self):
         layout = self.ui.frame_job_list_table.layout()
@@ -46,6 +51,7 @@ class JobListTable(QFrame):
                 child = layout.takeAt(0)
                 if child.widget():
                     child.widget().deleteLater()
+    
     
     def retrieve_jobs(self):
         # clear existing rows

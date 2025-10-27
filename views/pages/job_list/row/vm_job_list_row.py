@@ -20,6 +20,7 @@ class JobListRow(QFrame):
         self.ui.toolButton_open_link.clicked.connect(self._on_open_link_clicked)
         self.ui.toolButton_remove.clicked.connect(self._on_remove_clicked)
         self.ui.toolButton_generate_tailored_resume.clicked.connect(self._on_generate_tailored_resume_clicked)
+        self.ui.toolButton_generate_cover_letter.clicked.connect(self._on_generate_cover_letter_clicked)
 
 
     def apply_values(self, job: Job, idx: int):
@@ -53,6 +54,11 @@ class JobListRow(QFrame):
         cv_text = file_manager.get_last_summary_json()
         print("cv text: ", cv_text)
         result = chat_manager.tailor_resume(self.job, cv_text)
-        file_manager.save_tailored_resume(result, f"tailored_resume_job_{self.id}.txt")
+        file_manager.save_tailored_resume_as_pdf(result, self.id)
         # Call the resume tailoring function here with the job details
 
+
+    def _on_generate_cover_letter_clicked(self):
+        cv_text = file_manager.get_last_summary_json()
+        result = chat_manager.generate_cover_letter(self.job, cv_text)
+        file_manager.save_cover_letter_as_pdf(result, self.id)

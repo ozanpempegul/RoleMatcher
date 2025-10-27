@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'job_list_headermynfnO.ui'
+## Form generated from reading UI file 'job_list_headermjBOjS.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.10.0
 ##
@@ -129,11 +129,21 @@ class Ui_Frame(object):
 
         self.horizontalLayout_2.addWidget(self.toolButton_refresh)
 
-        self.frame_button_placeholder_4 = QFrame(self.frame)
-        self.frame_button_placeholder_4.setObjectName(u"frame_button_placeholder_4")
+        self.frame_button_placeholder_5 = QFrame(self.frame)
+        self.frame_button_placeholder_5.setObjectName(u"frame_button_placeholder_5")
         sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         sizePolicy3.setHorizontalStretch(0)
         sizePolicy3.setVerticalStretch(0)
+        sizePolicy3.setHeightForWidth(self.frame_button_placeholder_5.sizePolicy().hasHeightForWidth())
+        self.frame_button_placeholder_5.setSizePolicy(sizePolicy3)
+        self.frame_button_placeholder_5.setMinimumSize(QSize(23, 23))
+        self.frame_button_placeholder_5.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame_button_placeholder_5.setFrameShadow(QFrame.Shadow.Raised)
+
+        self.horizontalLayout_2.addWidget(self.frame_button_placeholder_5)
+
+        self.frame_button_placeholder_4 = QFrame(self.frame)
+        self.frame_button_placeholder_4.setObjectName(u"frame_button_placeholder_4")
         sizePolicy3.setHeightForWidth(self.frame_button_placeholder_4.sizePolicy().hasHeightForWidth())
         self.frame_button_placeholder_4.setSizePolicy(sizePolicy3)
         self.frame_button_placeholder_4.setMinimumSize(QSize(23, 23))

@@ -2,12 +2,11 @@ import json
 import uuid
 from datetime import datetime
 import os
-import re
 from pathlib import Path
 from docx import Document
 from common.imports.log import*
 from PySide6.QtCore import Signal, QThread
-
+from xhtml2pdf import pisa  # type: ignore
 
 
 class FileManager(QThread):
@@ -17,6 +16,8 @@ class FileManager(QThread):
     def __init__(self):
         super().__init__()
         self.last_summary_data = None
+        self._tailored_resume_folder_name = "tailored_resumes"
+        self._cover_letter_folder_name = "cover_letters"
         self._load_last_summary_json()
 
 
@@ -87,19 +88,77 @@ class FileManager(QThread):
     def get_last_summary_json(self) -> dict | None:
         return self.last_summary_data
     
+    
+    def save_tailored_resume_as_pdf(self,
+                                    html_text: str = None,
+                                    output_folder_name: str = None
+                                    ) -> str:
+        """
+        output_folder_name: str -> name of the output folder.
+        Convert HTML to PDF and write to output_path.
+        Returns the output_path on success.
+        """
+        # xhtml2pdf doesn't accept many options like other libs; we support basic conversion.
+        if html_text is None:
+            raise RuntimeError("No content to convert for xhtml2pdf")
+        
+        if output_folder_name is None:
+            raise RuntimeError("Output folder name must be provided")
+        else:
+            output_folder_name = str(output_folder_name)
 
-    def save_tailored_resume(self, content: str, filename: str) -> str:
-        os.makedirs("tailored_resumes", exist_ok=True)
-        if not filename:
-            filename = f"{uuid.uuid4()}.txt"
-        if not filename.endswith(".txt"):
-            filename += ".txt"
-        path = os.path.join("tailored_resumes", filename)
+        os.makedirs(output_folder_name, exist_ok=True)
+        os.makedirs(self._tailored_resume_folder_name, exist_ok=True)
+        _path = os.path.join(self._tailored_resume_folder_name, output_folder_name, "Resume.pdf")
 
-        with open(path, "w", encoding="utf-8") as f:
-            f.write(content)
+        # ensure target directory exists
+        os.makedirs(os.path.dirname(_path), exist_ok=True)
+        with open(_path, "wb") as out_f:
+            # CreatePDF returns a pisaStatus object with .err attribute
+            pisa_status = pisa.CreatePDF(src=html_text, dest=out_f)
+            if getattr(pisa_status, "err", None):
+                # try to include any available log/message for easier debugging
+                log = getattr(pisa_status, "log", None)
+                if log:
+                    raise RuntimeError(f"xhtml2pdf failed to create PDF: {log}")
+                raise RuntimeError("xhtml2pdf failed to create PDF")
+        return _path
+    
 
-        return path
+    def save_cover_letter_as_pdf(self,
+                                    text: str = None,
+                                    output_folder_name: str = None
+                                    ) -> str:
+        """
+        output_folder_name: str -> name of the output folder.
+        Convert HTML to PDF and write to output_path.
+        Returns the output_path on success.
+        """
+        # xhtml2pdf doesn't accept many options like other libs; we support basic conversion.
+        if text is None:
+            raise RuntimeError("No content to convert for xhtml2pdf")
+        
+        if output_folder_name is None:
+            raise RuntimeError("Output folder name must be provided")
+        else:
+            output_folder_name = str(output_folder_name)
+
+        os.makedirs(output_folder_name, exist_ok=True)
+        os.makedirs(self._tailored_resume_folder_name, exist_ok=True)
+        _path = os.path.join(self._tailored_resume_folder_name, output_folder_name, "Cover Letter.pdf")
+
+        # ensure target directory exists
+        os.makedirs(os.path.dirname(_path), exist_ok=True)
+        with open(_path, "wb") as out_f:
+            # CreatePDF returns a pisaStatus object with .err attribute
+            pisa_status = pisa.CreatePDF(src=text, dest=out_f)
+            if getattr(pisa_status, "err", None):
+                # try to include any available log/message for easier debugging
+                log = getattr(pisa_status, "log", None)
+                if log:
+                    raise RuntimeError(f"xhtml2pdf failed to create PDF: {log}")
+                raise RuntimeError("xhtml2pdf failed to create PDF")
+        return _path
     
 
 file_manager = FileManager()
