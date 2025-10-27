@@ -1,6 +1,6 @@
 from .ui_upload_resume import *
 from PySide6.QtWidgets import QFileDialog
-from managers.resume_summarizer import resume_summarizer
+from managers.chat_manager import chat_manager
 from PySide6.QtCore import Signal
 
 
@@ -37,5 +37,5 @@ class UploadResumeFrame(QFrame):
             options=options
         )
         if self.file_path:
-            resume_summarizer.start_pipeline(self.file_path)
+            chat_manager.summarize_resume(self.file_path)
 

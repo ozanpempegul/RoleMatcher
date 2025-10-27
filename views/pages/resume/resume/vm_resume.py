@@ -1,7 +1,7 @@
 from .ui_resume import *
 from ..upload_resume.vm_upload_resume import UploadResumeFrame
 from ..display_resume.vm_display_resume import DisplayResumeFrame
-from managers.resume_summarizer import resume_summarizer
+from managers.file_manager import file_manager
 
 
 class ResumePage(QWidget):
@@ -12,17 +12,12 @@ class ResumePage(QWidget):
 
         self._init_ui()
         self._init_event_handlers()
+        self.on_resume_uploaded(file_manager.get_last_summary_json())
 
 
     def _init_ui(self):
         self._init_upload_resume_frame()
         self._init_display_resume_frame()
-        data = resume_summarizer.get_data_from_summary_json()
-        if data:
-            self.display_resume_frame.load_json_to_form(data)
-            self.ui.stackedWidget.setCurrentIndex(1)
-        else:
-            self.ui.stackedWidget.setCurrentIndex(0)
 
 
     def _init_upload_resume_frame(self):
@@ -42,13 +37,15 @@ class ResumePage(QWidget):
 
 
     def _init_event_handlers(self):
-        resume_summarizer.signal_resume_summarized.connect(self.on_resume_uploaded)
         self.display_resume_frame.signal_cv_removed.connect(self.on_cv_removed)
+        file_manager.signal_last_summary_json_loaded.connect(self.on_resume_uploaded)
 
 
     def on_resume_uploaded(self, data):
-        self.display_resume_frame.load_json_to_form(data)
-        self.ui.stackedWidget.setCurrentIndex(1)
+        if data:
+            self.display_resume_frame.load_json_to_form(data)
+            self.display_resume_frame.file_path = file_manager._find_last_summary_path()
+            self.ui.stackedWidget.setCurrentIndex(1)
 
 
     def on_cv_removed(self):

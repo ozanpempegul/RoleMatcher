@@ -2,13 +2,12 @@ from .ui_job_list_row import *
 from models.job import Job, Sites
 from managers.db import db_manager
 import webbrowser
-from managers.resume_tailor import resume_tailor
-from managers.resume_summarizer import resume_summarizer
+from managers.file_manager import file_manager
+from managers.chat_manager import chat_manager
 
 
 
 class JobListRow(QFrame):
-
     def __init__(self):
         super().__init__()
         self.ui = Ui_Frame()
@@ -16,10 +15,12 @@ class JobListRow(QFrame):
 
         self._init_event_handlers()
 
+
     def _init_event_handlers(self):
         self.ui.toolButton_open_link.clicked.connect(self._on_open_link_clicked)
         self.ui.toolButton_remove.clicked.connect(self._on_remove_clicked)
         self.ui.toolButton_generate_tailored_resume.clicked.connect(self._on_generate_tailored_resume_clicked)
+
 
     def apply_values(self, job: Job, idx: int):
         self.job = job
@@ -38,15 +39,20 @@ class JobListRow(QFrame):
         self.link = job.url
         self.job_description = job.description
 
+
     def _on_open_link_clicked(self):
         if self.link:
             webbrowser.open(self.link)
 
+
     def _on_remove_clicked(self):
         db_manager.remove_job(self.id)
 
+
     def _on_generate_tailored_resume_clicked(self):
-        cv_text = resume_summarizer.get_data_from_summary_json()
-        resume_tailor._start_pipeline(self.job, cv_text)
+        cv_text = file_manager.get_last_summary_json()
+        print("cv text: ", cv_text)
+        result = chat_manager.tailor_resume(self.job, cv_text)
+        file_manager.save_tailored_resume(result, f"tailored_resume_job_{self.id}.txt")
         # Call the resume tailoring function here with the job details
 

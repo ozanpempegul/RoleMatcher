@@ -52,3 +52,6 @@ test.py
 
 # project specific
 summaries/
+tailored_resumes/
+test_cv.html
+*.pdf

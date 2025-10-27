@@ -95,10 +95,11 @@ class DisplayResumeFrame(QFrame):
         except Exception as e:
             logging.error(f"Error clearing layout: {e}")
 
+        
+        if data is None:
+            return
 
         # Fill sections
-        if "meta" in data:
-            self.populate_static_fields(self.ui.metaLayout, data["meta"])
         if "profile" in data:
             self.populate_static_fields(self.ui.profileLayout, data["profile"])
         if "skills" in data:
