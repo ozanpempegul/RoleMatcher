@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>518</width>
-    <height>300</height>
+    <width>1012</width>
+    <height>512</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -30,14 +30,14 @@
     <number>0</number>
    </property>
    <item>
-    <widget class="QFrame" name="frame_job_list_table">
+    <widget class="QFrame" name="frame">
      <property name="frameShape">
       <enum>QFrame::Shape::StyledPanel</enum>
      </property>
      <property name="frameShadow">
       <enum>QFrame::Shadow::Raised</enum>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
+     <layout class="QHBoxLayout" name="horizontalLayout">
       <property name="spacing">
        <number>0</number>
       </property>
@@ -48,28 +48,143 @@
        <number>0</number>
       </property>
       <property name="rightMargin">
-       <number>0</number>
+       <number>20</number>
       </property>
       <property name="bottomMargin">
        <number>0</number>
       </property>
       <item>
-       <widget class="QFrame" name="frame_job_list_header">
-        <property name="minimumSize">
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Orientation::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
          <size>
-          <width>0</width>
-          <height>40</height>
+          <width>40</width>
+          <height>20</height>
          </size>
         </property>
-        <property name="frameShape">
-         <enum>QFrame::Shape::StyledPanel</enum>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QToolButton" name="toolButton_refresh">
+        <property name="toolTip">
+         <string>Refresh List</string>
         </property>
-        <property name="frameShadow">
-         <enum>QFrame::Shadow::Raised</enum>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="../../../../resources.qrc">
+          <normaloff>:/job_list/assets/icons/refresh-page.png</normaloff>:/job_list/assets/icons/refresh-page.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>32</width>
+          <height>32</height>
+         </size>
         </property>
        </widget>
       </item>
      </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTableWidget" name="tableWidget">
+     <property name="showGrid">
+      <bool>true</bool>
+     </property>
+     <attribute name="horizontalHeaderDefaultSectionSize">
+      <number>100</number>
+     </attribute>
+     <column>
+      <property name="text">
+       <string>TITLE</string>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>COMPANY</string>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>LOCATION</string>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>JOB TYPE</string>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>REMOTE</string>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>SCORE</string>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>REMOVE</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>OPEN LINK</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>TAILOR</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>COVER LETTER</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string/>
+      </property>
+     </column>
     </widget>
    </item>
    <item>
@@ -87,6 +202,8 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../../../resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

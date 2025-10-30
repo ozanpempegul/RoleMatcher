@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'job_list_headermjBOjS.ui'
+## Form generated from reading UI file 'job_list_headerJJdBPU.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.10.0
 ##
@@ -22,7 +22,7 @@ class Ui_Frame(object):
     def setupUi(self, Frame):
         if not Frame.objectName():
             Frame.setObjectName(u"Frame")
-        Frame.resize(978, 82)
+        Frame.resize(789, 82)
         Frame.setStyleSheet(u"QFrame {\n"
 "    font-family: \"Segoe UI\";\n"
 "    font-size: 14pt;\n"
@@ -42,21 +42,14 @@ class Ui_Frame(object):
         self.frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.frame.setFrameShadow(QFrame.Shadow.Raised)
         self.horizontalLayout_2 = QHBoxLayout(self.frame)
+        self.horizontalLayout_2.setSpacing(6)
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.horizontalLayout_2.setContentsMargins(0, 0, 0, 0)
         self.label_id = QLabel(self.frame)
         self.label_id.setObjectName(u"label_id")
-        self.label_id.setMinimumSize(QSize(40, 0))
-        self.label_id.setMaximumSize(QSize(40, 16777215))
         self.label_id.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.horizontalLayout_2.addWidget(self.label_id, 0, Qt.AlignmentFlag.AlignLeft)
-
-        self.label_site = QLabel(self.frame)
-        self.label_site.setObjectName(u"label_site")
-        self.label_site.setMinimumSize(QSize(75, 0))
-        self.label_site.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.horizontalLayout_2.addWidget(self.label_site, 0, Qt.AlignmentFlag.AlignHCenter)
+        self.horizontalLayout_2.addWidget(self.label_id)
 
         self.label_title = QLabel(self.frame)
         self.label_title.setObjectName(u"label_title")
@@ -65,50 +58,41 @@ class Ui_Frame(object):
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.label_title.sizePolicy().hasHeightForWidth())
         self.label_title.setSizePolicy(sizePolicy1)
-        self.label_title.setMinimumSize(QSize(200, 0))
-        self.label_title.setMaximumSize(QSize(200, 16777215))
         self.label_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.horizontalLayout_2.addWidget(self.label_title, 0, Qt.AlignmentFlag.AlignHCenter)
+        self.horizontalLayout_2.addWidget(self.label_title)
 
         self.label_company_name = QLabel(self.frame)
         self.label_company_name.setObjectName(u"label_company_name")
-        self.label_company_name.setMinimumSize(QSize(150, 0))
         self.label_company_name.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.horizontalLayout_2.addWidget(self.label_company_name, 0, Qt.AlignmentFlag.AlignHCenter)
+        self.horizontalLayout_2.addWidget(self.label_company_name)
 
         self.label_location = QLabel(self.frame)
         self.label_location.setObjectName(u"label_location")
-        self.label_location.setMinimumSize(QSize(120, 0))
-        self.label_location.setMaximumSize(QSize(120, 16777215))
         self.label_location.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.horizontalLayout_2.addWidget(self.label_location, 0, Qt.AlignmentFlag.AlignHCenter)
+        self.horizontalLayout_2.addWidget(self.label_location)
 
         self.label_job_type = QLabel(self.frame)
         self.label_job_type.setObjectName(u"label_job_type")
-        self.label_job_type.setMinimumSize(QSize(75, 0))
         self.label_job_type.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.horizontalLayout_2.addWidget(self.label_job_type, 0, Qt.AlignmentFlag.AlignHCenter)
+        self.horizontalLayout_2.addWidget(self.label_job_type)
 
         self.label = QLabel(self.frame)
         self.label.setObjectName(u"label")
         sizePolicy1.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
         self.label.setSizePolicy(sizePolicy1)
-        self.label.setMinimumSize(QSize(75, 0))
-        self.label.setMaximumSize(QSize(75, 16777215))
 
-        self.horizontalLayout_2.addWidget(self.label, 0, Qt.AlignmentFlag.AlignHCenter)
+        self.horizontalLayout_2.addWidget(self.label)
 
-        self.label_job_level = QLabel(self.frame)
-        self.label_job_level.setObjectName(u"label_job_level")
-        self.label_job_level.setMinimumSize(QSize(120, 0))
-        self.label_job_level.setMaximumSize(QSize(120, 16777215))
-        self.label_job_level.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.label_2 = QLabel(self.frame)
+        self.label_2.setObjectName(u"label_2")
+        sizePolicy1.setHeightForWidth(self.label_2.sizePolicy().hasHeightForWidth())
+        self.label_2.setSizePolicy(sizePolicy1)
 
-        self.horizontalLayout_2.addWidget(self.label_job_level, 0, Qt.AlignmentFlag.AlignHCenter)
+        self.horizontalLayout_2.addWidget(self.label_2)
 
         self.frame_line_placeholder = QFrame(self.frame)
         self.frame_line_placeholder.setObjectName(u"frame_line_placeholder")
@@ -183,13 +167,12 @@ class Ui_Frame(object):
     def retranslateUi(self, Frame):
         Frame.setWindowTitle(QCoreApplication.translate("Frame", u"Frame", None))
         self.label_id.setText(QCoreApplication.translate("Frame", u"id", None))
-        self.label_site.setText(QCoreApplication.translate("Frame", u"site", None))
         self.label_title.setText(QCoreApplication.translate("Frame", u"title", None))
         self.label_company_name.setText(QCoreApplication.translate("Frame", u"company name", None))
         self.label_location.setText(QCoreApplication.translate("Frame", u"location", None))
         self.label_job_type.setText(QCoreApplication.translate("Frame", u"job type", None))
         self.label.setText(QCoreApplication.translate("Frame", u"Remote", None))
-        self.label_job_level.setText(QCoreApplication.translate("Frame", u"job level", None))
+        self.label_2.setText(QCoreApplication.translate("Frame", u"Score", None))
 #if QT_CONFIG(tooltip)
         self.toolButton_refresh.setToolTip(QCoreApplication.translate("Frame", u"Refresh List", None))
 #endif // QT_CONFIG(tooltip)

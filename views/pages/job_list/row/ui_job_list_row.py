@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'job_list_rowxdeaCV.ui'
+## Form generated from reading UI file 'job_list_rowQConts.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.10.0
 ##
@@ -22,83 +22,65 @@ class Ui_Frame(object):
     def setupUi(self, Frame):
         if not Frame.objectName():
             Frame.setObjectName(u"Frame")
-        Frame.resize(1011, 85)
+        Frame.resize(788, 85)
         Frame.setStyleSheet(u"QFrame {\n"
 "    font-family: \"Segoe UI\";\n"
 "    font-size: 12pt;\n"
 "}")
         self.horizontalLayout = QHBoxLayout(Frame)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
         self.label_id = QLabel(Frame)
         self.label_id.setObjectName(u"label_id")
-        self.label_id.setMinimumSize(QSize(40, 0))
-        self.label_id.setMaximumSize(QSize(40, 16777215))
         self.label_id.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.horizontalLayout.addWidget(self.label_id, 0, Qt.AlignmentFlag.AlignLeft)
-
-        self.label_site = QLabel(Frame)
-        self.label_site.setObjectName(u"label_site")
-        self.label_site.setMinimumSize(QSize(75, 0))
-        self.label_site.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.horizontalLayout.addWidget(self.label_site, 0, Qt.AlignmentFlag.AlignHCenter)
+        self.horizontalLayout.addWidget(self.label_id)
 
         self.label_title = QLabel(Frame)
         self.label_title.setObjectName(u"label_title")
-        sizePolicy = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Preferred)
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label_title.sizePolicy().hasHeightForWidth())
         self.label_title.setSizePolicy(sizePolicy)
-        self.label_title.setMinimumSize(QSize(200, 0))
-        self.label_title.setMaximumSize(QSize(200, 16777215))
         self.label_title.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.horizontalLayout.addWidget(self.label_title, 0, Qt.AlignmentFlag.AlignHCenter)
+        self.horizontalLayout.addWidget(self.label_title)
 
         self.label_company_name = QLabel(Frame)
         self.label_company_name.setObjectName(u"label_company_name")
-        self.label_company_name.setMinimumSize(QSize(150, 0))
         self.label_company_name.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.horizontalLayout.addWidget(self.label_company_name, 0, Qt.AlignmentFlag.AlignHCenter)
+        self.horizontalLayout.addWidget(self.label_company_name)
 
         self.label_location = QLabel(Frame)
         self.label_location.setObjectName(u"label_location")
-        self.label_location.setMinimumSize(QSize(120, 0))
-        self.label_location.setMaximumSize(QSize(120, 16777215))
         self.label_location.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.horizontalLayout.addWidget(self.label_location, 0, Qt.AlignmentFlag.AlignHCenter)
+        self.horizontalLayout.addWidget(self.label_location)
 
         self.label_job_type = QLabel(Frame)
         self.label_job_type.setObjectName(u"label_job_type")
-        self.label_job_type.setMinimumSize(QSize(75, 0))
         self.label_job_type.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.horizontalLayout.addWidget(self.label_job_type, 0, Qt.AlignmentFlag.AlignHCenter)
+        self.horizontalLayout.addWidget(self.label_job_type)
 
         self.checkBox_is_remote = QCheckBox(Frame)
         self.checkBox_is_remote.setObjectName(u"checkBox_is_remote")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
-        sizePolicy1.setHorizontalStretch(0)
-        sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(self.checkBox_is_remote.sizePolicy().hasHeightForWidth())
-        self.checkBox_is_remote.setSizePolicy(sizePolicy1)
-        self.checkBox_is_remote.setMinimumSize(QSize(75, 20))
-        self.checkBox_is_remote.setMaximumSize(QSize(75, 20))
+        self.checkBox_is_remote.setEnabled(False)
+        sizePolicy.setHeightForWidth(self.checkBox_is_remote.sizePolicy().hasHeightForWidth())
+        self.checkBox_is_remote.setSizePolicy(sizePolicy)
+        self.checkBox_is_remote.setMinimumSize(QSize(20, 0))
         self.checkBox_is_remote.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
 
-        self.horizontalLayout.addWidget(self.checkBox_is_remote, 0, Qt.AlignmentFlag.AlignHCenter)
+        self.horizontalLayout.addWidget(self.checkBox_is_remote)
 
-        self.label_job_level = QLabel(Frame)
-        self.label_job_level.setObjectName(u"label_job_level")
-        self.label_job_level.setMinimumSize(QSize(120, 0))
-        self.label_job_level.setMaximumSize(QSize(120, 16777215))
-        self.label_job_level.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.label_match_score = QLabel(Frame)
+        self.label_match_score.setObjectName(u"label_match_score")
+        sizePolicy.setHeightForWidth(self.label_match_score.sizePolicy().hasHeightForWidth())
+        self.label_match_score.setSizePolicy(sizePolicy)
 
-        self.horizontalLayout.addWidget(self.label_job_level, 0, Qt.AlignmentFlag.AlignHCenter)
+        self.horizontalLayout.addWidget(self.label_match_score)
 
         self.line = QFrame(Frame)
         self.line.setObjectName(u"line")
@@ -142,13 +124,12 @@ class Ui_Frame(object):
     def retranslateUi(self, Frame):
         Frame.setWindowTitle(QCoreApplication.translate("Frame", u"Frame", None))
         self.label_id.setText(QCoreApplication.translate("Frame", u"id", None))
-        self.label_site.setText(QCoreApplication.translate("Frame", u"LINKEDIN", None))
         self.label_title.setText(QCoreApplication.translate("Frame", u"title", None))
         self.label_company_name.setText(QCoreApplication.translate("Frame", u"company name", None))
         self.label_location.setText(QCoreApplication.translate("Frame", u"location", None))
         self.label_job_type.setText(QCoreApplication.translate("Frame", u"fulltime", None))
         self.checkBox_is_remote.setText("")
-        self.label_job_level.setText(QCoreApplication.translate("Frame", u"mid-senior level", None))
+        self.label_match_score.setText(QCoreApplication.translate("Frame", u"Score", None))
 #if QT_CONFIG(tooltip)
         self.toolButton_generate_cover_letter.setToolTip(QCoreApplication.translate("Frame", u"generate cover letter", None))
 #endif // QT_CONFIG(tooltip)
