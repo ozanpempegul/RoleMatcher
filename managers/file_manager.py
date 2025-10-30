@@ -108,12 +108,13 @@ class FileManager(QThread):
             output_folder_name = str(output_folder_name)
 
         os.makedirs(output_folder_name, exist_ok=True)
-        os.makedirs(self._tailored_resume_folder_name, exist_ok=True)
-        _path = os.path.join(self._tailored_resume_folder_name, output_folder_name, "Resume.pdf")
+        folder_path = os.path.join(self._tailored_resume_folder_name, output_folder_name)
+        os.makedirs(folder_path, exist_ok=True)
+        full_path = os.path.join(folder_path, "Resume.pdf")
 
         # ensure target directory exists
-        os.makedirs(os.path.dirname(_path), exist_ok=True)
-        with open(_path, "wb") as out_f:
+        os.makedirs(os.path.dirname(full_path), exist_ok=True)
+        with open(full_path, "wb") as out_f:
             # CreatePDF returns a pisaStatus object with .err attribute
             pisa_status = pisa.CreatePDF(src=html_text, dest=out_f)
             if getattr(pisa_status, "err", None):
@@ -122,7 +123,7 @@ class FileManager(QThread):
                 if log:
                     raise RuntimeError(f"xhtml2pdf failed to create PDF: {log}")
                 raise RuntimeError("xhtml2pdf failed to create PDF")
-        return _path
+        return full_path
     
 
     def save_cover_letter_as_pdf(self,
@@ -143,6 +144,21 @@ class FileManager(QThread):
         else:
             output_folder_name = str(output_folder_name)
 
+        font_style = """
+<style>
+@font-face {
+    font-family: "DejaVuSans";
+    src: url("fonts/DejaVuSans.ttf");
+}
+body, div {
+    font-family: "DejaVuSans";
+    font-size: 10pt;
+}
+</style>
+"""
+        
+        full_text = font_style+text
+
         os.makedirs(output_folder_name, exist_ok=True)
         os.makedirs(self._tailored_resume_folder_name, exist_ok=True)
         _path = os.path.join(self._tailored_resume_folder_name, output_folder_name, "Cover Letter.pdf")
@@ -151,7 +167,7 @@ class FileManager(QThread):
         os.makedirs(os.path.dirname(_path), exist_ok=True)
         with open(_path, "wb") as out_f:
             # CreatePDF returns a pisaStatus object with .err attribute
-            pisa_status = pisa.CreatePDF(src=text, dest=out_f)
+            pisa_status = pisa.CreatePDF(src=full_text, dest=out_f, link_callback=lambda uri, rel: os.path.join(os.getcwd(), uri))
             if getattr(pisa_status, "err", None):
                 # try to include any available log/message for easier debugging
                 log = getattr(pisa_status, "log", None)
@@ -162,3 +178,4 @@ class FileManager(QThread):
     
 
 file_manager = FileManager()
+

@@ -5,6 +5,7 @@ from sqlalchemy.exc import IntegrityError
 from common.imports.log import *
 import os
 from models.job import Job, Sites
+from models.job_match_score import JobMatchScore
 from PySide6.QtCore import Signal, QObject
 from pathlib import Path
 
@@ -13,6 +14,7 @@ from pathlib import Path
 USE_SQLITE_FLAG = os.getenv("USE_SQLITE", "False").lower() in ("true")
 SQLITE_DB_PATH = os.getenv("SQLITE_DB_PATH", "./job_alerts.db")
 POSTGRES_CONFIG_PRESENT = all(os.getenv(k) for k in ("POSTGRES_DB","POSTGRES_USER","POSTGRES_PASSWORD","POSTGRES_HOST","POSTGRES_PORT"))
+
 
 def _choose_db_url():
     if USE_SQLITE_FLAG or not POSTGRES_CONFIG_PRESENT:
@@ -51,6 +53,8 @@ site_map = {
     "zip_recruiter": Sites.ZIP_RECRUITER,
     "google": Sites.GOOGLE
 }
+
+
 
 # python
 class DBManager(QObject):
@@ -93,6 +97,7 @@ class DBManager(QObject):
         self.signal_data_saved.emit()
         db.close()
 
+
     def get_jobs(self, skip: int = 0, limit: int = 100) -> list[Job]:
         try:
             logging.info("Getting jobs from the database")
@@ -122,11 +127,15 @@ class DBManager(QObject):
             logging.error(f"Error retrieving jobs: {e}")
             return []
         
+        
     def remove_job(self, job_id: int):
         try:
             logging.info(f"Removing job with ID {job_id} from the database")
             db = self.SessionLocal()
             job = db.query(Job).filter(Job.id == job_id).first()
+            job_match = db.query(JobMatchScore).filter(JobMatchScore.job_id == job_id).first()
+            if job_match:
+                db.delete(job_match)
             if job:
                 db.delete(job)
                 db.commit()
@@ -134,5 +143,37 @@ class DBManager(QObject):
             db.close()
         except Exception as e:
             logging.error(f"Error removing job with ID {job_id}: {e}")
+
+
+    def save_match_score(self, job_id: int, score: float):
+        """Save or update match score for a given job_id."""
+        db = self.SessionLocal()
+        try:
+            match = db.query(JobMatchScore).filter(JobMatchScore.job_id == job_id).first()
+            if match:
+                match.score = score
+            else:
+                match = JobMatchScore(job_id=job_id, score=score)
+                db.add(match)
+            db.commit()
+        except Exception as e:
+            logging.error(f"Error saving match score for job {job_id}: {e}")
+            db.rollback()
+        finally:
+            db.close()
+
+
+    def get_match_score(self, job_id: int) -> float | None:
+        """Retrieve the match score for a given job_id. Returns None if not found."""
+        db = self.SessionLocal()
+        try:
+            match = db.query(JobMatchScore).filter(JobMatchScore.job_id == job_id).first()
+            return match.score if match else None
+        except Exception as e:
+            logging.error(f"Error retrieving match score for job {job_id}: {e}")
+            return None
+        finally:
+            db.close()
+
 
 db_manager = DBManager()  # Module-level instance

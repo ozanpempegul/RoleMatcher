@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, Boolean, Enum as SAEnum
+from sqlalchemy.orm import relationship
 from .base import Base
 import enum
 
@@ -24,3 +25,5 @@ class Job(Base):
     is_remote = Column(Boolean, default=False)
     job_level = Column(String, nullable=True)
     description = Column(String, nullable=True)
+
+    match_score = relationship("JobMatchScore", uselist=False, back_populates="job")
