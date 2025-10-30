@@ -57,70 +57,70 @@ class ChatManager:
                       cv_text: str, 
                       job_description: str
                       ) -> str:
-        prompt = (
-            "You are an expert resume writer who tailors resumes to job descriptions.\n\n"
-            "Job description:\n"
-            f"{job_description}\n\n"
-            "Candidate summarized CV (plain text):\n"
-            f"{cv_text}\n\n"
-            "Instructions:\n"
-            f"""
+        prompt = (f"""
+            You are an expert resume writer who tailors resumes to job descriptions.
+
+            Job description:
+            {job_description}
+
+            Candidate summarized CV (plain text):
+            {cv_text}
+
+            Instructions:
             You are a resume HTML generator tasked with producing a concise, reverse-chronological CV section that aligns closely with a given job description. Please follow the rules below:
 
             1. **Output Format:**
-            - **Return only one HTML fragment.**
-            - Allowed tags: `<p>`, `<ul>`, `<ol>`, `<li>`, `<strong>`, `<em>`, `<br>`, `<hr>`.
-            - No `<script>`, no external CSS, and no wrapper elements.
+            - Return only one HTML fragment.
+            - Allowed tags: <p>, <ul>, <ol>, <li>, <strong>, <em>, <br>, <hr>.
+            - No <script>, no external CSS, and no wrapper elements.
             - Inline styles are required.
 
             2. **Visual Styling:**
-            - Normal text and list items: `style="font-size:10pt;"`
-            - Section titles: `<p style="text-align:center; font-size:12pt;"><strong>Section Name</strong></p>`
-            - Name: `<p style="text-align:center; font-size:16pt;"><strong>Full Name</strong></p>`
-            - Contact info: Single centered line `<p style="text-align:center; font-size:10pt;">Email | Phone | Location</p>`
-            - Major sections are separated by: `<hr style="border:0; border-top:1px solid #000;">`
+            - Normal text and list items: style="font-size:10pt;"
+            - Section titles: <p style="text-align:center; font-size:12pt;"><strong>Section Name</strong></p>
+            - Name: <p style="text-align:center; font-size:16pt;"><strong>Full Name</strong></p>
+            - Contact info: single centered line <p style="text-align:center; font-size:10pt;">Email | Phone | Location</p>
+            - Major sections separated by: <hr style="border:0; border-top:1px solid #000;">
 
             3. **Summary Section:**
-            - **Include a Summary** section directly after the Contact Info.
-            - The Summary should be a brief paragraph (2-3 sentences) that:
-                - **Highlights the most relevant skills, experiences, and qualifications** from the candidate’s profile that align with the job description.
-                - **Mentions specific keywords or skills** requested in the job description, such as technical proficiencies, core competencies, or industry knowledge (without mentioning the company name).
-                - **Avoid company-specific references**; instead, focus on the value the candidate brings to a role similar to the job they're applying for.
-                - The tone should be **tailored** to the job description, implying the candidate’s interest in the role and demonstrating how their background makes them a strong fit.
+            - Include a Summary section directly after Contact Info.
+            - The Summary should be 2-3 sentences highlighting the most relevant skills, experiences, and qualifications matching the job description.
+            - Mention keywords or skills from the job description.
+            - Avoid company-specific references.
 
             4. **Experience Section (reverse-chronological):**
-            - For each role in the provided resume, include the following details:
-                - `<p style="font-size:12pt;"><strong>Role Title</strong></p>`
-                - `<p style="font-size:10pt;">Company Name – Location | Start Date – End Date</p>`
-                - `<ul style="font-size:10pt;">`
-                - `<li>Brief, fact-based, and relevant bullet point (outcome-oriented)</li>`
-                - `<li>Another significant achievement or responsibility</li>`
-                - `</ul>`
-            - Ensure **all relevant experience** is included without omitting any significant information. Do not skip or leave out any job or achievement that could be beneficial.
+            - For each role: 
+            <p style="font-size:12pt;"><strong>Role Title</strong></p>
+            <p style="font-size:10pt;">Company Name – Location | Start Date – End Date</p>
+            <ul style="font-size:10pt;">
+            <li>Relevant bullet point (outcome-oriented)</li>
+            </ul>
 
             5. **Education Section (reverse-chronological, no bullets):**
-            - `<p style="font-size:12pt;"><strong>Department Name</strong></p>`
-            - `<p style="font-size:10pt;">School Name – Location | Start Date – End Date</p>`
+            - <p style="font-size:12pt;"><strong>Department Name</strong></p>
+            - <p style="font-size:10pt;">School Name – Location | Start Date – End Date</p>
 
             6. **Content Guidelines:**
-            - **Rephrase** bullet points to emphasize measurable outcomes, responsibilities, or technical skills that directly align with the job description.
-            - Do not fabricate new skills or positions.
-            - Emphasize **quantifiable achievements**, **key skills**, and responsibilities that match the job description.
-            - **Include all relevant experience** from the original resume. Ensure that each job listed is presented with the most relevant and impactful achievements.
+            - Rephrase bullets to emphasize measurable outcomes and key skills.
+            - Include all relevant experience.
+            - Do not fabricate skills or positions.
 
             7. **Section Headers:**
-            - Ensure proper **section headers** are included and formatted as follows:
-                - **Name Section**: Display the full name centered at the top of the document.
-                - **Contact Information Section**: Center the contact information below the name.
-                - **Summary Section**: Directly below Contact Info, summarize the individual’s career focus and align with the job description.
-                - **Experience Section**: For each job, list in reverse chronological order, ensuring all jobs from the original resume are included.
-                - **Education Section**: Display all education in reverse chronological order.
-            - Separate each major section using a horizontal rule (`<hr>`), as described in the Visual Styling section.
+            - Name at top, Contact Info below.
+            - Summary directly after Contact Info.
+            - Experience in reverse chronological order.
+            - Education in reverse chronological order.
+            - Separate each major section with <hr> as described.
 
-            8. **Output Restrictions:**
-            - Return **only the HTML fragment** with the above specifications.
-            - Do **not** include explanations, placeholders, or any extra text before or after the HTML.
-            - Ensure each section is properly separated by a horizontal rule (`<hr>`) and formatted as described above.
+            8. **Matching Score:**
+            - Estimate a matching score (0-100) between the job description and candidate CV.
+            - Include it as an HTML comment **at the very end** of the HTML fragment like this:
+            <!-- MATCHING_SCORE: 87 -->
+            - Do not include the score anywhere else in the HTML.
+
+            9. **Output Restrictions:**
+            - Return **only the HTML fragment** following the rules above.
+            - Do not include explanations, placeholders, or extra text.
             """
         )
         return prompt
@@ -143,22 +143,38 @@ class ChatManager:
                                             job_description: str, 
                                             max_length_words: Optional[int] = 350
                                             ) -> str:
-        prompt = (
-            "You are an expert career writer. Given a short candidate CV summary and a job description, "
-            "produce a single, professional, first-person cover letter tailored to the job.\n\n"
-            "Job description:\n"
-            f"{job_description}\n\n"
-            "Candidate summarized CV (plain text):\n"
-            f"{cv_text}\n\n"
-            "Instructions:\n"
-            f"- Produce a cover letter with 2-3 short paragraphs: an opening (1-2 sentences showing interest and fit), "
-            f"a body (2-3 sentences linking specific achievements/skills to the job requirements), and a closing (1-2 sentences with a call-to-action and sign-off).\n"
-            f"- Use a professional, confident tone in first-person. Do not mention the company by name.\n"
-            f"- Naturally include relevant keywords/skills from the job description (3-8 keywords) within the letter.\n"
-            f"- Keep the cover letter to at most {max_length_words} words.\n"
-            f"- Do not fabricate experience or facts not present in the CV summary. Rephrase and prioritize what aligns with the job.\n"
-            f"- Return ONLY the cover letter text. Do NOT include analysis, JSON, headers, or any additional text before or after the letter.\n"
-        )
+        prompt = f"""
+        You are an expert career writer. Given a short candidate CV summary and a job description, produce a single, professional, first-person cover letter tailored to the job.
+
+        Job description:
+        {job_description}
+
+        Candidate summarized CV (plain text):
+        {cv_text}
+
+        Requirements and instructions:
+        - The cover letter MUST start exactly with: "Dear Recruiter," as the very first line.
+        - Format requirements to ensure PDF converts paragraphs correctly:
+          * Wrap the entire cover letter in a single wrapper element only: <div style="font-size:10pt;">...HTML content...</div>
+          * Inside that single wrapper, use explicit paragraph tags for separation. Specifically:
+        - Put "Dear Recruiter," in its own paragraph: <p>Dear Recruiter,</p>
+        - Use 2-3 short paragraphs for the body, each enclosed in its own <p>...</p>.
+        - Place the sign-off block in a separate paragraph tag after the closing paragraph. The sign-off paragraph should contain:
+          Best regards,<br>
+          &lt;Full Name&gt;
+          where &lt;Full Name&gt; is the candidate's name from the CV summary (field 'name') or "Candidate" if absent.
+          * Do NOT omit paragraph tags or rely only on line breaks; paragraph tags are required so PDF renderers keep separate blocks.
+          * Do not add any other wrapper elements or surrounding metadata outside the single <div> wrapper.
+        - Structure the letter content into 2-3 short paragraphs:
+          1) Opening: 1-2 sentences showing interest and fit.
+          2) Body: 2-3 sentences linking specific achievements/skills from the CV summary to the job requirements.
+          3) Closing: 1-2 sentences with a call-to-action.
+        - Use a professional, confident tone in first-person. Do NOT mention the company by name.
+        - Naturally include 3-8 relevant keywords/skills from the job description within the letter.
+        - Do NOT fabricate experience, skills, metrics, or facts not present in the CV summary. Rephrase and prioritize only what aligns with the job.
+        - Keep the letter to at most {max_length_words} words.
+        - Return ONLY the cover letter as the single HTML string described above (the <div> wrapper containing inner <p> paragraphs and the sign-off). Do NOT include any analysis, JSON, headers, labels, explanations, or any extra text before or after the HTML. Return nothing else.
+        """
         return prompt
 
 
