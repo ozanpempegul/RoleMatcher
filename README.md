@@ -84,3 +84,11 @@ To downgrade the database to a previous migration, run:
 alembic downgrade <revision>
 ```
 Replace `<revision>` with the target revision identifier (e.g., `-1` for one step back).
+
+-------------------------------
+
+Compile the .qrc to a Python module:
+
+- PySide6:
+```bash
+pyside6-rcc resources.qrc -o resources_rc.py

@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="job_list">
+    <file>assets/icons/remove.png</file>
+    <file>assets/icons/refresh-page.png</file>
+  </qresource>
+</RCC>
