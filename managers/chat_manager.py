@@ -58,7 +58,7 @@ class ChatManager:
                       job_description: str
                       ) -> str:
         prompt = (f"""
-            You are an expert resume writer who tailors resumes to job descriptions.
+            You are an expert resume writer who tailors resumes to job descriptions using Harvard Style format.
 
             Job description:
             {job_description}
@@ -67,60 +67,96 @@ class ChatManager:
             {cv_text}
 
             Instructions:
-            You are a resume HTML generator tasked with producing a concise, reverse-chronological CV section that aligns closely with a given job description. Please follow the rules below:
+            You are a resume HTML generator tasked with producing a Harvard Style resume that aligns closely with a given job description. Harvard Style resumes follow a specific format and structure. Please follow the rules below:
 
             1. **Output Format:**
             - Return only one HTML fragment.
             - Allowed tags: <p>, <ul>, <ol>, <li>, <strong>, <em>, <br>, <hr>.
             - No <script>, no external CSS, and no wrapper elements.
             - Inline styles are required.
+            - Use clean, minimal layout with consistent spacing.
 
             2. **Visual Styling:**
-            - Normal text and list items: style="font-size:10pt;"
-            - Section titles: <p style="text-align:center; font-size:12pt;"><strong>Section Name</strong></p>
-            - Name: <p style="text-align:center; font-size:16pt;"><strong>Full Name</strong></p>
-            - Contact info: single centered line <p style="text-align:center; font-size:10pt;">Email | Phone | Location</p>
-            - Major sections separated by: <hr style="border:0; border-top:1px solid #000;">
+            - Normal text and list items: style="font-size:10pt; margin: 0; padding: 0;"
+            - Section titles (left-aligned, bold, uppercase): <p style="font-size:11pt; font-weight:bold; text-transform:uppercase; margin-top:8pt; margin-bottom:4pt;"><strong>SECTION NAME</strong></p>
+            - Name (centered, larger font): <p style="text-align:center; font-size:16pt; font-weight:bold; margin-bottom:4pt;"><strong>Full Name</strong></p>
+            - Contact info (centered, single line): <p style="text-align:center; font-size:10pt; margin-bottom:8pt;">Email | Phone | City, State</p>
+            - Major sections separated by: <hr style="border:0; border-top:1px solid #000; margin:8pt 0;">
 
-            3. **Summary Section:**
-            - Include a Summary section directly after Contact Info.
-            - The Summary should be 2-3 sentences highlighting the most relevant skills, experiences, and qualifications matching the job description.
-            - Mention keywords or skills from the job description.
-            - Avoid company-specific references.
+            3. **Section Order (MANDATORY Harvard Style order):**
+            The sections MUST appear in this exact order:
+            a) Contact Information (Name and Contact)
+            b) Education (comes BEFORE Experience in Harvard style)
+            c) Experience (work experience in reverse chronological order)
+            d) Leadership & Activities (mandatory Harvard section - include if available in CV)
+            e) Skills (optional, include if relevant to job)
 
-            4. **Experience Section (reverse-chronological):**
-            - For each role: 
-            <p style="font-size:12pt;"><strong>Role Title</strong></p>
-            <p style="font-size:10pt;">Company Name – Location | Start Date – End Date</p>
-            <ul style="font-size:10pt;">
-            <li>Relevant bullet point (outcome-oriented)</li>
+            4. **Contact Information Section:**
+            - Name centered at top with larger, bold font
+            - Contact details centered below name: Email | Phone | City, State
+            - No photos, age, gender, or sensitive information
+
+            5. **Education Section (comes BEFORE Experience):**
+            - Format: <p style="font-size:11pt; font-weight:bold; margin-top:8pt; margin-bottom:2pt;"><strong>EDUCATION</strong></p>
+            - For each degree (reverse chronological order):
+            <p style="font-size:10pt; margin: 0; padding: 0;"><strong>Degree Name</strong>, Institution Name, Location</p>
+            <p style="font-size:10pt; margin: 0; padding: 0; font-style:italic;">Month Year – Month Year (or "Expected Month Year" if ongoing)</p>
+            - Include honors/distinctions in italics on same line: <em>magna cum laude</em>, <em>Dean's List</em>, etc.
+            - Example:
+            <p style="font-size:10pt; margin: 0; padding: 0;"><strong>Bachelor of Science in Computer Science</strong>, University Name, City, State</p>
+            <p style="font-size:10pt; margin: 0; padding: 0; font-style:italic;">September 2018 – May 2022 | <em>magna cum laude</em></p>
+
+            6. **Experience Section (reverse-chronological order):**
+            - Format: <p style="font-size:11pt; font-weight:bold; text-transform:uppercase; margin-top:8pt; margin-bottom:4pt;"><strong>EXPERIENCE</strong></p>
+            - For each role:
+            <p style="font-size:10pt; margin: 0; padding: 0;"><strong>Job Title</strong> | Company Name, Location</p>
+            <p style="font-size:10pt; margin: 0; padding: 0; font-style:italic;">Month Year – Month Year (or "Present" if current)</p>
+            <ul style="font-size:10pt; margin: 4pt 0; padding-left: 20pt;">
+            <li style="margin: 2pt 0;">Action verb bullet point with quantifiable results</li>
+            <li style="margin: 2pt 0;">Another outcome-oriented achievement</li>
             </ul>
+            - Use action verbs (developed, implemented, managed, etc.)
+            - Emphasize measurable outcomes and quantifiable achievements
+            - Tailor bullets to match job description keywords and requirements
 
-            5. **Education Section (reverse-chronological, no bullets):**
-            - <p style="font-size:12pt;"><strong>Department Name</strong></p>
-            - <p style="font-size:10pt;">School Name – Location | Start Date – End Date</p>
+            7. **Leadership & Activities Section (MANDATORY for Harvard Style):**
+            - Format: <p style="font-size:11pt; font-weight:bold; text-transform:uppercase; margin-top:8pt; margin-bottom:4pt;"><strong>LEADERSHIP & ACTIVITIES</strong></p>
+            - Include student organizations, elected offices, volunteer work, clubs, etc.
+            - Format similar to Experience:
+            <p style="font-size:10pt; margin: 0; padding: 0;"><strong>Role/Position</strong> | Organization Name, Location</p>
+            <p style="font-size:10pt; margin: 0; padding: 0; font-style:italic;">Month Year – Month Year</p>
+            <ul style="font-size:10pt; margin: 4pt 0; padding-left: 20pt;">
+            <li style="margin: 2pt 0;">Key achievement or responsibility</li>
+            </ul>
+            - If no leadership/activities in CV, create a minimal section or skip if truly none exist
 
-            6. **Content Guidelines:**
-            - Rephrase bullets to emphasize measurable outcomes and key skills.
-            - Include all relevant experience.
-            - Do not fabricate skills or positions.
+            8. **Skills Section (Optional but recommended if relevant):**
+            - Format: <p style="font-size:11pt; font-weight:bold; text-transform:uppercase; margin-top:8pt; margin-bottom:4pt;"><strong>SKILLS</strong></p>
+            - List relevant technical skills, languages, software, etc. that match the job description
+            - Format as comma-separated or bullet list:
+            <p style="font-size:10pt; margin: 0; padding: 0;">Programming Languages: Python, JavaScript, Java | Frameworks: React, Django | Tools: Git, Docker</p>
 
-            7. **Section Headers:**
-            - Name at top, Contact Info below.
-            - Summary directly after Contact Info.
-            - Experience in reverse chronological order.
-            - Education in reverse chronological order.
-            - Separate each major section with <hr> as described.
+            9. **Content Guidelines:**
+            - Use active voice and action verbs throughout
+            - Emphasize quantifiable achievements (numbers, percentages, metrics)
+            - Tailor content to match job description keywords and requirements
+            - Do not fabricate skills, positions, or achievements
+            - Keep to one page if possible (prioritize most relevant content)
+            - Use consistent date format: "Month Year" (e.g., "September 2020")
+            - Avoid personal pronouns (I, me, my)
+            - No abbreviations unless standard (e.g., "USA" is fine, but spell out company names)
 
-            8. **Matching Score:**
+            10. **Matching Score:**
             - Estimate a matching score (0-100) between the job description and candidate CV.
             - Include it as an HTML comment **at the very end** of the HTML fragment like this:
             <!-- MATCHING_SCORE: 87 -->
             - Do not include the score anywhere else in the HTML.
 
-            9. **Output Restrictions:**
-            - Return **only the HTML fragment** following the rules above.
+            11. **Output Restrictions:**
+            - Return **only the HTML fragment** following Harvard Style format above.
+            - Sections MUST be in this order: Contact → Education → Experience → Leadership & Activities → Skills
             - Do not include explanations, placeholders, or extra text.
+            - Ensure clean, professional appearance suitable for PDF conversion.
             """
         )
         return prompt
