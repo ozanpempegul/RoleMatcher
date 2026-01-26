@@ -1,9 +1,9 @@
-from PySide6.QtWidgets import QPushButton
-from managers.db import db_manager
+from PySide6.QtWidgets import QPushButton, QMessageBox
 from managers.file_manager import file_manager
-from managers.chat_manager import chat_manager
+from workers.tailor_resume_worker import TailorResumeWorker
 from models.job import Job
-import re
+import json
+from common.imports.log import *
 
 
 class TailorResumeButton(QPushButton):
@@ -12,6 +12,7 @@ class TailorResumeButton(QPushButton):
         self.setObjectName("tailor_resume_button")
         self._init_style()
         self.job = job
+        self.worker = None
 
 
     def _init_style(self):
@@ -23,25 +24,66 @@ class TailorResumeButton(QPushButton):
                 padding: 5px 10px;
                 border-radius: 3px;
             }
+            QPushButton#tailor_resume_button:disabled {
+                background-color: #95a5a6;
+            }
         """)
 
 
     def mousePressEvent(self, event):
-        cv_text = file_manager.get_last_summary_json()
-        result = chat_manager.tailor_resume(self.job, cv_text)
-        score = self.extract_match_score(result)
-        db_manager.save_match_score(self.job.id, score)
-        file_manager.save_tailored_resume_as_pdf(result, self.job.id)
+        if self.worker and self.worker.isRunning():
+            return  # Already processing
+        
+        cv_data = file_manager.get_last_summary_json()
+        if not cv_data:
+            QMessageBox.warning(self, "Warning", "Please upload and summarize a resume first.")
+            return
+        
+        # Convert dict to JSON string for the API
+        cv_text = json.dumps(cv_data, ensure_ascii=False) if isinstance(cv_data, dict) else str(cv_data)
+        
+        # Disable button during operation
+        self.setEnabled(False)
+        self.setText("Tailoring...")
+        
+        # Create and start worker thread
+        self.worker = TailorResumeWorker(self.job, cv_text)
+        self.worker.signal_finished.connect(self._on_finished)
+        self.worker.signal_error.connect(self._on_error)
+        self.worker.signal_progress.connect(self._on_progress)
+        self.worker.start()
+        
         super().mousePressEvent(event)
 
+    def _on_finished(self, html_result: str, match_score: float):
+        """Called when resume tailoring is complete."""
+        logging.info(f"Resume tailored successfully for job {self.job.id}, score: {match_score}")
+        self.setEnabled(True)
+        self.setText("Tailor")
+        
+        # Clean up worker
+        if self.worker:
+            self.worker.quit()
+            self.worker.wait()
+            self.worker = None
+        
+        QMessageBox.information(self, "Success", 
+                               f"Resume tailored successfully!\nMatch Score: {match_score:.2f}%")
 
-    def extract_match_score(self, html_text: str) -> float | None:
-        """
-        Extract the matching score from HTML comment.
-        Example comment: <!-- MATCHING_SCORE: 87 -->
-        Returns the score as float, or None if not found.
-        """
-        match = re.search(r"<!--\s*MATCHING_SCORE:\s*(\d+(\.\d+)?)\s*-->", html_text)
-        if match:
-            return float(match.group(1))
-        return None
+    def _on_error(self, error_msg: str):
+        """Called when resume tailoring fails."""
+        logging.error(f"Resume tailoring error: {error_msg}")
+        self.setEnabled(True)
+        self.setText("Tailor")
+        
+        if self.worker:
+            self.worker.quit()
+            self.worker.wait()
+            self.worker = None
+        
+        QMessageBox.critical(self, "Error", f"Failed to tailor resume:\n{error_msg}")
+
+    def _on_progress(self, message: str):
+        """Called for progress updates."""
+        logging.info(f"Progress: {message}")
+        self.setText(message[:15] + "..." if len(message) > 15 else message)

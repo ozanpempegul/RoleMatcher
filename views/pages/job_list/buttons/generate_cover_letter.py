@@ -1,7 +1,9 @@
-from PySide6.QtWidgets import QPushButton
+from PySide6.QtWidgets import QPushButton, QMessageBox
 from managers.file_manager import file_manager
-from managers.chat_manager import chat_manager
+from workers.cover_letter_worker import CoverLetterWorker
 from models.job import Job
+import json
+from common.imports.log import *
 
 
 class GenerateCoverLetterButton(QPushButton):
@@ -10,6 +12,7 @@ class GenerateCoverLetterButton(QPushButton):
         self.setObjectName("generate_cover_letter_button")
         self._init_style()
         self.job = job
+        self.worker = None
 
 
     def _init_style(self):
@@ -21,12 +24,66 @@ class GenerateCoverLetterButton(QPushButton):
                 padding: 5px 10px;
                 border-radius: 3px;
             }
+            QPushButton#generate_cover_letter_button:disabled {
+                background-color: #95a5a6;
+            }
         """)
 
 
     def mousePressEvent(self, event):
-        cv_text = file_manager.get_last_summary_json()
-        result = chat_manager.generate_cover_letter(self.job, cv_text)
-        file_manager.save_cover_letter_as_pdf(result, self.job.id)
+        if self.worker and self.worker.isRunning():
+            return  # Already processing
+        
+        cv_data = file_manager.get_last_summary_json()
+        if not cv_data:
+            QMessageBox.warning(self, "Warning", "Please upload and summarize a resume first.")
+            return
+        
+        # Convert dict to JSON string for the API
+        cv_text = json.dumps(cv_data, ensure_ascii=False) if isinstance(cv_data, dict) else str(cv_data)
+        
+        # Disable button during operation
+        self.setEnabled(False)
+        self.setText("Generating...")
+        
+        # Create and start worker thread
+        self.worker = CoverLetterWorker(self.job, cv_text)
+        self.worker.signal_finished.connect(self._on_finished)
+        self.worker.signal_error.connect(self._on_error)
+        self.worker.signal_progress.connect(self._on_progress)
+        self.worker.start()
+        
         super().mousePressEvent(event)
+
+    def _on_finished(self, html_result: str):
+        """Called when cover letter generation is complete."""
+        logging.info(f"Cover letter generated successfully for job {self.job.id}")
+        self.setEnabled(True)
+        self.setText("Cover Letter")
+        
+        # Clean up worker
+        if self.worker:
+            self.worker.quit()
+            self.worker.wait()
+            self.worker = None
+        
+        QMessageBox.information(self, "Success", "Cover letter generated successfully!")
+
+    def _on_error(self, error_msg: str):
+        """Called when cover letter generation fails."""
+        logging.error(f"Cover letter generation error: {error_msg}")
+        self.setEnabled(True)
+        self.setText("Cover Letter")
+        
+        if self.worker:
+            self.worker.quit()
+            self.worker.wait()
+            self.worker = None
+        
+        QMessageBox.critical(self, "Error", f"Failed to generate cover letter:\n{error_msg}")
+
+    def _on_progress(self, message: str):
+        """Called for progress updates."""
+        logging.info(f"Progress: {message}")
+        self.setText(message[:15] + "..." if len(message) > 15 else message)
 
