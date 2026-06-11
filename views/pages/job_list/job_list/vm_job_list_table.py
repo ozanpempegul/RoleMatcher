@@ -5,6 +5,7 @@ from ..buttons.tailor_resume import TailorResumeButton
 from ..buttons.generate_cover_letter import GenerateCoverLetterButton
 from models.job import Job
 from managers.db import db_manager
+from PySide6.QtCore import Qt
 from common.imports.log import*
 
 
@@ -23,11 +24,13 @@ class JobListTable(QFrame):
 
 
     def _init_ui(self):
-        pass
+        self.retrieve_jobs()
 
 
     def _init_event_handlers(self):
-        db_manager.signal_data_saved.connect(self.retrieve_jobs)
+        db_manager.signal_data_saved.connect(
+            self.retrieve_jobs, Qt.ConnectionType.QueuedConnection
+        )
         self.ui.toolButton_refresh.clicked.connect(self.retrieve_jobs)
         
 
@@ -40,7 +43,7 @@ class JobListTable(QFrame):
             self.ui.tableWidget.setItem(idx, 0, QTableWidgetItem(job.title))
             self.ui.tableWidget.setItem(idx, 1, QTableWidgetItem(job.company_name))
             self.ui.tableWidget.setItem(idx, 2, QTableWidgetItem(job.location))
-            self.ui.tableWidget.setItem(idx, 3, QTableWidgetItem(job.job_type))
+            self.ui.tableWidget.setItem(idx, 3, QTableWidgetItem(job.job_type or ""))
             self.ui.tableWidget.setItem(idx, 4, QTableWidgetItem("Yes" if job.is_remote else "No"))
             score_text = f"{match_score:.2f}%" if match_score is not None else "N/A"
             self.ui.tableWidget.setItem(idx, 5, QTableWidgetItem(score_text))

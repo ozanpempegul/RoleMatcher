@@ -12,7 +12,8 @@ from pathlib import Path
 
 
 USE_SQLITE_FLAG = os.getenv("USE_SQLITE", "False").lower() in ("true")
-SQLITE_DB_PATH = os.getenv("SQLITE_DB_PATH", "./job_alerts.db")
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent
+SQLITE_DB_PATH = os.getenv("SQLITE_DB_PATH", str(_PROJECT_ROOT / "job_alerts.db"))
 POSTGRES_CONFIG_PRESENT = all(os.getenv(k) for k in ("POSTGRES_DB","POSTGRES_USER","POSTGRES_PASSWORD","POSTGRES_HOST","POSTGRES_PORT"))
 
 
@@ -68,13 +69,20 @@ class DBManager(QObject):
         self.SessionLocal = sessionmaker(bind=self.engine, autoflush=False, autocommit=False)
 
 
-    def save_jobs(self, df):
+    def save_jobs(self, df) -> tuple[int, int]:
         logging.info("Saving jobs to the database")
         db = self.SessionLocal()
+        saved = 0
+        skipped = 0
         for _, row in df.iterrows():
-            site_enum = site_map.get(row['site'].lower())
+            site_enum = site_map.get(row["site"].lower())
             if not site_enum:
+                skipped += 1
                 continue
+
+            job_type = row.get("job_type")
+            if job_type != job_type:  # NaN check
+                job_type = None
 
             job = Job(
                 site=site_enum,
@@ -82,20 +90,23 @@ class DBManager(QObject):
                 title=row.get("title", "No Title"),
                 company_name=row.get("company", "Unknown"),
                 location=row.get("location", "Unknown"),
-                job_type=row.get("job_type"),
-                is_remote=row.get("is_remote", False),
+                job_type=job_type,
+                is_remote=bool(row.get("is_remote", False)),
                 job_level=row.get("job_level"),
-                description=row.get("description")
+                description=row.get("description"),
             )
 
             db.add(job)
             try:
                 db.commit()
+                saved += 1
             except IntegrityError:
                 db.rollback()
+                skipped += 1
 
-        self.signal_data_saved.emit()
         db.close()
+        self.signal_data_saved.emit()
+        return saved, skipped
 
 
     def get_jobs(self, skip: int = 0, limit: int = 100) -> list[Job]:

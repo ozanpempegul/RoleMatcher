@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'job_list_tableGMgkhZ.ui'
+## Form generated from reading UI file 'job_list_tablejfWzNd.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.10.0
 ##
@@ -92,10 +92,6 @@ class Ui_Frame(object):
         self.tableWidget.horizontalHeader().setDefaultSectionSize(100)
 
         self.verticalLayout.addWidget(self.tableWidget)
-
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.verticalLayout.addItem(self.verticalSpacer)
 
 
         self.retranslateUi(Frame)

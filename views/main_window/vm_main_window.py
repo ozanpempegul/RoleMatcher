@@ -29,8 +29,8 @@ class MainWindow(QMainWindow):
     def _init_job_list_table(self):
         layout = QVBoxLayout(self.ui.page_retrieved_jobs)
         layout.setContentsMargins(0, 0, 0, 0)
-        job_list_table = JobListTable()
-        layout.addWidget(job_list_table)
+        self.job_list_table = JobListTable()
+        layout.addWidget(self.job_list_table)
 
     def _init_resume_page(self):
         layout = QVBoxLayout(self.ui.page_resume)
@@ -57,6 +57,7 @@ class MainWindow(QMainWindow):
 
     def on_retrieved_jobs_clicked(self):
         self.ui.stackedWidget.setCurrentIndex(1)
+        self.job_list_table.retrieve_jobs()
 
     def on_resume_clicked(self):
         self.ui.stackedWidget.setCurrentIndex(2)
