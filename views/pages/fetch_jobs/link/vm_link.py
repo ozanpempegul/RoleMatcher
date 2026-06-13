@@ -7,4 +7,4 @@ class LinkFrame(QFrame):
         self.ui.setupUi(self)
 
     def get_link(self) -> str:
-        return self.ui.lineEdit.text().strip()
+        return self.ui.lineEdit_link.text().strip()

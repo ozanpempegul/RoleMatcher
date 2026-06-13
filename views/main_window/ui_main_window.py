@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'main_windowYmYWZM.ui'
+## Form generated from reading UI file 'main_windowDmEWrW.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.10.0
 ##
@@ -23,7 +23,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(825, 502)
+        MainWindow.resize(1236, 505)
         MainWindow.setToolButtonStyle(Qt.ToolButtonStyle.ToolButtonIconOnly)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
@@ -63,30 +63,6 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout.addItem(self.horizontalSpacer)
 
-        self.toolButton_settings = QToolButton(self.frame)
-        self.toolButton_settings.setObjectName(u"toolButton_settings")
-        self.toolButton_settings.setStyleSheet(u"background-color: rgb(85, 170, 255);")
-
-        self.horizontalLayout.addWidget(self.toolButton_settings)
-
-        self.toolButton_minimize = QToolButton(self.frame)
-        self.toolButton_minimize.setObjectName(u"toolButton_minimize")
-        self.toolButton_minimize.setStyleSheet(u"background-color: rgb(244, 244, 122);")
-
-        self.horizontalLayout.addWidget(self.toolButton_minimize)
-
-        self.toolButton_maximize = QToolButton(self.frame)
-        self.toolButton_maximize.setObjectName(u"toolButton_maximize")
-        self.toolButton_maximize.setStyleSheet(u"background-color: rgb(85, 170, 0);")
-
-        self.horizontalLayout.addWidget(self.toolButton_maximize, 0, Qt.AlignmentFlag.AlignRight)
-
-        self.toolButton_exit = QToolButton(self.frame)
-        self.toolButton_exit.setObjectName(u"toolButton_exit")
-        self.toolButton_exit.setStyleSheet(u"background-color: rgb(188, 0, 0);")
-
-        self.horizontalLayout.addWidget(self.toolButton_exit, 0, Qt.AlignmentFlag.AlignRight)
-
 
         self.verticalLayout.addWidget(self.frame)
 
@@ -122,21 +98,5 @@ class Ui_MainWindow(object):
         self.toolButton_show_fetch_jobs_page.setText(QCoreApplication.translate("MainWindow", u"Fetch Jobs", None))
         self.toolButton_show_retrieved_jobs_page.setText(QCoreApplication.translate("MainWindow", u"Retrieved Jobs", None))
         self.toolButton_show_resume_page.setText(QCoreApplication.translate("MainWindow", u"Resume", None))
-#if QT_CONFIG(tooltip)
-        self.toolButton_settings.setToolTip(QCoreApplication.translate("MainWindow", u"Settings", None))
-#endif // QT_CONFIG(tooltip)
-        self.toolButton_settings.setText("")
-#if QT_CONFIG(tooltip)
-        self.toolButton_minimize.setToolTip(QCoreApplication.translate("MainWindow", u"Minimize", None))
-#endif // QT_CONFIG(tooltip)
-        self.toolButton_minimize.setText("")
-#if QT_CONFIG(tooltip)
-        self.toolButton_maximize.setToolTip(QCoreApplication.translate("MainWindow", u"Maximize", None))
-#endif // QT_CONFIG(tooltip)
-        self.toolButton_maximize.setText("")
-#if QT_CONFIG(tooltip)
-        self.toolButton_exit.setToolTip(QCoreApplication.translate("MainWindow", u"Exit", None))
-#endif // QT_CONFIG(tooltip)
-        self.toolButton_exit.setText("")
     # retranslateUi
 

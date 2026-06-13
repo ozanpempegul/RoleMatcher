@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1012</width>
+    <width>1099</width>
     <height>512</height>
    </rect>
   </property>
@@ -97,6 +97,9 @@
      <property name="showGrid">
       <bool>true</bool>
      </property>
+     <attribute name="horizontalHeaderMinimumSectionSize">
+      <number>32</number>
+     </attribute>
      <attribute name="horizontalHeaderDefaultSectionSize">
       <number>100</number>
      </attribute>
@@ -172,7 +175,7 @@
      </column>
      <column>
       <property name="text">
-       <string>TAILOR</string>
+       <string>TAILOR &amp; MATCH</string>
       </property>
      </column>
      <column>
@@ -182,7 +185,7 @@
      </column>
      <column>
       <property name="text">
-       <string/>
+       <string>OPEN FOLDER</string>
       </property>
      </column>
     </widget>

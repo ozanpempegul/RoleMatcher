@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>339</width>
-    <height>444</height>
+    <height>443</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -42,7 +42,7 @@
        <number>0</number>
       </property>
       <property name="rightMargin">
-       <number>0</number>
+       <number>10</number>
       </property>
       <property name="bottomMargin">
        <number>0</number>
@@ -61,48 +61,10 @@
        </widget>
       </item>
       <item>
-       <widget class="QFrame" name="frame">
-        <property name="frameShape">
-         <enum>QFrame::Shape::StyledPanel</enum>
+       <widget class="QCheckBox" name="checkBox_linkedin">
+        <property name="text">
+         <string>Linkedin</string>
         </property>
-        <property name="frameShadow">
-         <enum>QFrame::Shadow::Raised</enum>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayout_2">
-         <item>
-          <widget class="QCheckBox" name="checkBox_linkedin">
-           <property name="text">
-            <string>Linkedin</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="checkBox_indeed">
-           <property name="text">
-            <string>Indeed</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </item>
-      <item>
-       <widget class="QFrame" name="frame_2">
-        <property name="frameShape">
-         <enum>QFrame::Shape::StyledPanel</enum>
-        </property>
-        <property name="frameShadow">
-         <enum>QFrame::Shadow::Raised</enum>
-        </property>
-        <layout class="QVBoxLayout" name="verticalLayout_3">
-         <item>
-          <widget class="QCheckBox" name="checkBox_google">
-           <property name="text">
-            <string>Google</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
        </widget>
       </item>
      </layout>
@@ -263,7 +225,11 @@
        </widget>
       </item>
       <item>
-       <widget class="QSpinBox" name="spinBox_hours_old"/>
+       <widget class="QSpinBox" name="spinBox_hours_old">
+        <property name="maximum">
+         <number>999</number>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>

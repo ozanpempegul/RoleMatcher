@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'job_list_tablejfWzNd.ui'
+## Form generated from reading UI file 'job_list_tableduqXXq.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.10.0
 ##
@@ -24,7 +24,7 @@ class Ui_Frame(object):
     def setupUi(self, Frame):
         if not Frame.objectName():
             Frame.setObjectName(u"Frame")
-        Frame.resize(1012, 512)
+        Frame.resize(1099, 512)
         self.verticalLayout = QVBoxLayout(Frame)
         self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName(u"verticalLayout")
@@ -89,6 +89,7 @@ class Ui_Frame(object):
         self.tableWidget.setHorizontalHeaderItem(10, __qtablewidgetitem10)
         self.tableWidget.setObjectName(u"tableWidget")
         self.tableWidget.setShowGrid(True)
+        self.tableWidget.horizontalHeader().setMinimumSectionSize(32)
         self.tableWidget.horizontalHeader().setDefaultSectionSize(100)
 
         self.verticalLayout.addWidget(self.tableWidget)
@@ -122,8 +123,10 @@ class Ui_Frame(object):
         ___qtablewidgetitem7 = self.tableWidget.horizontalHeaderItem(7)
         ___qtablewidgetitem7.setText(QCoreApplication.translate("Frame", u"OPEN LINK", None));
         ___qtablewidgetitem8 = self.tableWidget.horizontalHeaderItem(8)
-        ___qtablewidgetitem8.setText(QCoreApplication.translate("Frame", u"TAILOR", None));
+        ___qtablewidgetitem8.setText(QCoreApplication.translate("Frame", u"TAILOR & MATCH", None));
         ___qtablewidgetitem9 = self.tableWidget.horizontalHeaderItem(9)
         ___qtablewidgetitem9.setText(QCoreApplication.translate("Frame", u"COVER LETTER", None));
+        ___qtablewidgetitem10 = self.tableWidget.horizontalHeaderItem(10)
+        ___qtablewidgetitem10.setText(QCoreApplication.translate("Frame", u"OPEN FOLDER", None));
     # retranslateUi
 

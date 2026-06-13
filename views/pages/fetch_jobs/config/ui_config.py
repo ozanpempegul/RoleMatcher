@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'configwtiivk.ui'
+## Form generated from reading UI file 'configgMCJHu.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.10.0
 ##
@@ -23,7 +23,7 @@ class Ui_Frame(object):
     def setupUi(self, Frame):
         if not Frame.objectName():
             Frame.setObjectName(u"Frame")
-        Frame.resize(339, 444)
+        Frame.resize(339, 443)
         self.verticalLayout = QVBoxLayout(Frame)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
@@ -33,45 +33,17 @@ class Ui_Frame(object):
         self.frame_site_names.setFrameShadow(QFrame.Shadow.Raised)
         self.horizontalLayout = QHBoxLayout(self.frame_site_names)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout.setContentsMargins(0, 0, 10, 0)
         self.label = QLabel(self.frame_site_names)
         self.label.setObjectName(u"label")
         self.label.setMinimumSize(QSize(150, 0))
 
         self.horizontalLayout.addWidget(self.label)
 
-        self.frame = QFrame(self.frame_site_names)
-        self.frame.setObjectName(u"frame")
-        self.frame.setFrameShape(QFrame.Shape.StyledPanel)
-        self.frame.setFrameShadow(QFrame.Shadow.Raised)
-        self.verticalLayout_2 = QVBoxLayout(self.frame)
-        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-        self.checkBox_linkedin = QCheckBox(self.frame)
+        self.checkBox_linkedin = QCheckBox(self.frame_site_names)
         self.checkBox_linkedin.setObjectName(u"checkBox_linkedin")
 
-        self.verticalLayout_2.addWidget(self.checkBox_linkedin)
-
-        self.checkBox_indeed = QCheckBox(self.frame)
-        self.checkBox_indeed.setObjectName(u"checkBox_indeed")
-
-        self.verticalLayout_2.addWidget(self.checkBox_indeed)
-
-
-        self.horizontalLayout.addWidget(self.frame)
-
-        self.frame_2 = QFrame(self.frame_site_names)
-        self.frame_2.setObjectName(u"frame_2")
-        self.frame_2.setFrameShape(QFrame.Shape.StyledPanel)
-        self.frame_2.setFrameShadow(QFrame.Shadow.Raised)
-        self.verticalLayout_3 = QVBoxLayout(self.frame_2)
-        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
-        self.checkBox_google = QCheckBox(self.frame_2)
-        self.checkBox_google.setObjectName(u"checkBox_google")
-
-        self.verticalLayout_3.addWidget(self.checkBox_google)
-
-
-        self.horizontalLayout.addWidget(self.frame_2)
+        self.horizontalLayout.addWidget(self.checkBox_linkedin)
 
 
         self.verticalLayout.addWidget(self.frame_site_names)
@@ -154,6 +126,7 @@ class Ui_Frame(object):
 
         self.spinBox_hours_old = QSpinBox(self.frame_hours_old)
         self.spinBox_hours_old.setObjectName(u"spinBox_hours_old")
+        self.spinBox_hours_old.setMaximum(999)
 
         self.horizontalLayout_5.addWidget(self.spinBox_hours_old)
 
@@ -192,8 +165,6 @@ class Ui_Frame(object):
         Frame.setWindowTitle(QCoreApplication.translate("Frame", u"Frame", None))
         self.label.setText(QCoreApplication.translate("Frame", u"Sites", None))
         self.checkBox_linkedin.setText(QCoreApplication.translate("Frame", u"Linkedin", None))
-        self.checkBox_indeed.setText(QCoreApplication.translate("Frame", u"Indeed", None))
-        self.checkBox_google.setText(QCoreApplication.translate("Frame", u"Google", None))
         self.label_2.setText(QCoreApplication.translate("Frame", u"Search Term: ", None))
         self.label_3.setText(QCoreApplication.translate("Frame", u"Location: ", None))
         self.label_4.setText(QCoreApplication.translate("Frame", u"Fetch Count: ", None))

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>825</width>
-    <height>502</height>
+    <width>1236</width>
+    <height>505</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -111,58 +111,6 @@
           </size>
          </property>
         </spacer>
-       </item>
-       <item>
-        <widget class="QToolButton" name="toolButton_settings">
-         <property name="toolTip">
-          <string>Settings</string>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">background-color: rgb(85, 170, 255);</string>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QToolButton" name="toolButton_minimize">
-         <property name="toolTip">
-          <string>Minimize</string>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">background-color: rgb(244, 244, 122);</string>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item alignment="Qt::AlignmentFlag::AlignRight">
-        <widget class="QToolButton" name="toolButton_maximize">
-         <property name="toolTip">
-          <string>Maximize</string>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">background-color: rgb(85, 170, 0);</string>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
-       <item alignment="Qt::AlignmentFlag::AlignRight">
-        <widget class="QToolButton" name="toolButton_exit">
-         <property name="toolTip">
-          <string>Exit</string>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">background-color: rgb(188, 0, 0);</string>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
        </item>
       </layout>
      </widget>

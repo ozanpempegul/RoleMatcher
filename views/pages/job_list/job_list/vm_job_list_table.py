@@ -3,6 +3,7 @@ from ..buttons.remove import RemoveButton
 from ..buttons.open_link import OpenLinkButton
 from ..buttons.tailor_resume import TailorResumeButton
 from ..buttons.generate_cover_letter import GenerateCoverLetterButton
+from ..buttons.open_cover_letter_folder import OpenCoverLetterFolderButton
 from models.job import Job
 from managers.db import db_manager
 from PySide6.QtCore import Qt
@@ -55,6 +56,8 @@ class JobListTable(QFrame):
             self.ui.tableWidget.setCellWidget(idx, 8, tailor_resume_btn)
             generate_cover_letter_btn = GenerateCoverLetterButton(job=job)
             self.ui.tableWidget.setCellWidget(idx, 9, generate_cover_letter_btn)
+            open_cover_letter_folder_btn = OpenCoverLetterFolderButton(job=job)
+            self.ui.tableWidget.setCellWidget(idx, 10, open_cover_letter_folder_btn)
             self.ui.tableWidget.resizeColumnsToContents()
         except Exception as e:
             print(f"Error adding row for job ID {getattr(job, 'id', 'unknown')}: {e}")
