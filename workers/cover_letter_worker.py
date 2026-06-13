@@ -26,7 +26,7 @@ class CoverLetterWorker(QThread):
             
             # Save PDF in background
             self.signal_progress.emit("Generating PDF...")
-            file_manager.save_cover_letter_as_pdf(result, self.job.id)
+            file_manager.save_cover_letter_as_pdf(result, self.job)
             
             logging.info(f"Cover letter generated successfully for job {self.job.id}")
             self.signal_finished.emit(result)

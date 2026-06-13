@@ -53,14 +53,14 @@ class JobListRow(QFrame):
         result = chat_manager.tailor_resume(self.job, cv_text)
         score = self.extract_match_score(result)
         db_manager.save_match_score(self.id, score)
-        file_manager.save_tailored_resume_as_pdf(result, self.id)
+        file_manager.save_tailored_resume_as_pdf(result, self.job)
         # Call the resume tailoring function here with the job details
 
 
     def _on_generate_cover_letter_clicked(self):
         cv_text = file_manager.get_last_summary_json()
         result = chat_manager.generate_cover_letter(self.job, cv_text)
-        file_manager.save_cover_letter_as_pdf(result, self.id)
+        file_manager.save_cover_letter_as_pdf(result, self.job)
 
 
     def extract_match_score(self, html_text: str) -> float | None:

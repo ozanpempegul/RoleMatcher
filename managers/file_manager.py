@@ -1,4 +1,5 @@
 import json
+import re
 import uuid
 from datetime import datetime
 import os
@@ -7,6 +8,7 @@ from docx import Document
 from common.imports.log import*
 from PySide6.QtCore import Signal, QThread
 from xhtml2pdf import pisa  # type: ignore
+from models.job import Job
 
 
 class FileManager(QThread):
@@ -87,14 +89,23 @@ class FileManager(QThread):
     
     def get_last_summary_json(self) -> dict | None:
         return self.last_summary_data
+
+
+    def _job_folder_name(self, job: Job) -> str:
+        name = job.title.strip() if job.title else f"job-{job.id}"
+        name = re.sub(r'[<>:"/\\|?*]', "", name)
+        name = " ".join(name.split()).strip(". ")
+        if not name:
+            name = f"job-{job.id}"
+        return name[:200]
     
     
     def save_tailored_resume_as_pdf(self,
                                     html_text: str = None,
-                                    output_folder_name: str = None
+                                    job: Job = None
                                     ) -> str:
         """
-        output_folder_name: str -> name of the output folder.
+        job: Job -> used to derive the output folder name from the job title.
         Convert HTML to PDF and write to output_path.
         Returns the output_path on success.
         """
@@ -102,13 +113,10 @@ class FileManager(QThread):
         if html_text is None:
             raise RuntimeError("No content to convert for xhtml2pdf")
         
-        if output_folder_name is None:
-            raise RuntimeError("Output folder name must be provided")
-        else:
-            output_folder_name = str(output_folder_name)
+        if job is None:
+            raise RuntimeError("Job must be provided")
 
-        os.makedirs(output_folder_name, exist_ok=True)
-        folder_path = os.path.join(self._tailored_resume_folder_name, output_folder_name)
+        folder_path = os.path.join(self._tailored_resume_folder_name, self._job_folder_name(job))
         os.makedirs(folder_path, exist_ok=True)
         full_path = os.path.join(folder_path, "Resume.pdf")
 
@@ -128,10 +136,10 @@ class FileManager(QThread):
 
     def save_cover_letter_as_pdf(self,
                                     text: str = None,
-                                    output_folder_name: str = None
+                                    job: Job = None
                                     ) -> str:
         """
-        output_folder_name: str -> name of the output folder.
+        job: Job -> used to derive the output folder name from the job title.
         Convert HTML to PDF and write to output_path.
         Returns the output_path on success.
         """
@@ -139,10 +147,8 @@ class FileManager(QThread):
         if text is None:
             raise RuntimeError("No content to convert for xhtml2pdf")
         
-        if output_folder_name is None:
-            raise RuntimeError("Output folder name must be provided")
-        else:
-            output_folder_name = str(output_folder_name)
+        if job is None:
+            raise RuntimeError("Job must be provided")
 
         font_style = """
 <style>
@@ -159,9 +165,8 @@ body, div {
         
         full_text = font_style+text
 
-        os.makedirs(output_folder_name, exist_ok=True)
         os.makedirs(self._tailored_resume_folder_name, exist_ok=True)
-        _path = os.path.join(self._tailored_resume_folder_name, output_folder_name, "Cover Letter.pdf")
+        _path = os.path.join(self._tailored_resume_folder_name, self._job_folder_name(job), "Cover Letter.pdf")
 
         # ensure target directory exists
         os.makedirs(os.path.dirname(_path), exist_ok=True)

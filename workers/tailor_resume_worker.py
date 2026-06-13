@@ -35,7 +35,7 @@ class TailorResumeWorker(QThread):
             
             # Save PDF in background
             self.signal_progress.emit("Generating PDF...")
-            file_manager.save_tailored_resume_as_pdf(result, self.job.id)
+            file_manager.save_tailored_resume_as_pdf(result, self.job)
             
             logging.info(f"Resume tailored successfully for job {self.job.id}")
             self.signal_finished.emit(result, score if score is not None else 0.0)
