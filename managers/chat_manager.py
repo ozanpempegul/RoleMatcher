@@ -1,6 +1,7 @@
 import os
 from openai import OpenAI
-from typing import Optional, List, Dict, Any, Union
+from typing import Optional, Union
+from common.paths import prompts_dir
 from models.job import Job
 from managers.file_manager import file_manager
 
@@ -26,6 +27,23 @@ class ChatManager:
         self.model = model
         self.max_completion_tokens = max_completion_tokens
         self.client = OpenAI(api_key=get_api_key())
+        self._prompt_cache: dict[str, str] = {}
+
+
+    def _load_prompt_template(self, name: str) -> str:
+        if name not in self._prompt_cache:
+            path = prompts_dir() / f"{name}.txt"
+            if not path.is_file():
+                raise FileNotFoundError(f"Prompt template not found: {path}")
+            self._prompt_cache[name] = path.read_text(encoding="utf-8-sig")
+        return self._prompt_cache[name]
+
+
+    def _render_prompt(self, name: str, **values: str) -> str:
+        prompt = self._load_prompt_template(name)
+        for key, value in values.items():
+            prompt = prompt.replace(f"{{{{{key}}}}}", str(value))
+        return prompt
 
 
     def _call_api(self, prompt: str) -> str:
@@ -57,109 +75,11 @@ class ChatManager:
                       cv_text: str, 
                       job_description: str
                       ) -> str:
-        prompt = (f"""
-            You are an expert resume writer who tailors resumes to job descriptions using Harvard Style format.
-
-            Job description:
-            {job_description}
-
-            Candidate summarized CV (plain text):
-            {cv_text}
-
-            Instructions:
-            You are a resume HTML generator tasked with producing a Harvard Style resume that aligns closely with a given job description. Harvard Style resumes follow a specific format and structure. Please follow the rules below:
-
-            1. **Output Format:**
-            - Return only one HTML fragment.
-            - Allowed tags: <p>, <ul>, <ol>, <li>, <strong>, <em>, <br>, <hr>.
-            - No <script>, no external CSS, and no wrapper elements.
-            - Inline styles are required.
-            - Use clean, minimal layout with consistent spacing.
-
-            2. **Visual Styling:**
-            - Normal text and list items: style="font-size:10pt; margin: 0; padding: 0;"
-            - Section titles (left-aligned, bold, uppercase): <p style="font-size:11pt; font-weight:bold; text-transform:uppercase; margin-top:8pt; margin-bottom:4pt;"><strong>SECTION NAME</strong></p>
-            - Name (centered, larger font): <p style="text-align:center; font-size:16pt; font-weight:bold; margin-bottom:4pt;"><strong>Full Name</strong></p>
-            - Contact info (centered, single line): <p style="text-align:center; font-size:10pt; margin-bottom:8pt;">Email | Phone | City, State</p>
-            - Major sections separated by: <hr style="border:0; border-top:1px solid #000; margin:8pt 0;">
-
-            3. **Section Order (MANDATORY Harvard Style order):**
-            The sections MUST appear in this exact order:
-            a) Contact Information (Name and Contact)
-            b) Education (comes BEFORE Experience in Harvard style)
-            c) Experience (work experience in reverse chronological order)
-            d) Leadership & Activities (mandatory Harvard section - include if available in CV)
-            e) Skills (optional, include if relevant to job)
-
-            4. **Contact Information Section:**
-            - Name centered at top with larger, bold font
-            - Contact details centered below name: Email | Phone | City, State
-            - No photos, age, gender, or sensitive information
-
-            5. **Education Section (comes BEFORE Experience):**
-            - Format: <p style="font-size:11pt; font-weight:bold; margin-top:8pt; margin-bottom:2pt;"><strong>EDUCATION</strong></p>
-            - For each degree (reverse chronological order):
-            <p style="font-size:10pt; margin: 0; padding: 0;"><strong>Degree Name</strong>, Institution Name, Location</p>
-            <p style="font-size:10pt; margin: 0; padding: 0; font-style:italic;">Month Year – Month Year (or "Expected Month Year" if ongoing)</p>
-            - Include honors/distinctions in italics on same line: <em>magna cum laude</em>, <em>Dean's List</em>, etc.
-            - Example:
-            <p style="font-size:10pt; margin: 0; padding: 0;"><strong>Bachelor of Science in Computer Science</strong>, University Name, City, State</p>
-            <p style="font-size:10pt; margin: 0; padding: 0; font-style:italic;">September 2018 – May 2022 | <em>magna cum laude</em></p>
-
-            6. **Experience Section (reverse-chronological order):**
-            - Format: <p style="font-size:11pt; font-weight:bold; text-transform:uppercase; margin-top:8pt; margin-bottom:4pt;"><strong>EXPERIENCE</strong></p>
-            - For each role:
-            <p style="font-size:10pt; margin: 0; padding: 0;"><strong>Job Title</strong> | Company Name, Location</p>
-            <p style="font-size:10pt; margin: 0; padding: 0; font-style:italic;">Month Year – Month Year (or "Present" if current)</p>
-            <ul style="font-size:10pt; margin: 4pt 0; padding-left: 20pt;">
-            <li style="margin: 2pt 0;">Action verb bullet point with quantifiable results</li>
-            <li style="margin: 2pt 0;">Another outcome-oriented achievement</li>
-            </ul>
-            - Use action verbs (developed, implemented, managed, etc.)
-            - Emphasize measurable outcomes and quantifiable achievements
-            - Tailor bullets to match job description keywords and requirements
-
-            7. **Leadership & Activities Section (MANDATORY for Harvard Style):**
-            - Format: <p style="font-size:11pt; font-weight:bold; text-transform:uppercase; margin-top:8pt; margin-bottom:4pt;"><strong>LEADERSHIP & ACTIVITIES</strong></p>
-            - Include student organizations, elected offices, volunteer work, clubs, etc.
-            - Format similar to Experience:
-            <p style="font-size:10pt; margin: 0; padding: 0;"><strong>Role/Position</strong> | Organization Name, Location</p>
-            <p style="font-size:10pt; margin: 0; padding: 0; font-style:italic;">Month Year – Month Year</p>
-            <ul style="font-size:10pt; margin: 4pt 0; padding-left: 20pt;">
-            <li style="margin: 2pt 0;">Key achievement or responsibility</li>
-            </ul>
-            - If no leadership/activities in CV, create a minimal section or skip if truly none exist
-
-            8. **Skills Section (Optional but recommended if relevant):**
-            - Format: <p style="font-size:11pt; font-weight:bold; text-transform:uppercase; margin-top:8pt; margin-bottom:4pt;"><strong>SKILLS</strong></p>
-            - List relevant technical skills, languages, software, etc. that match the job description
-            - Format as comma-separated or bullet list:
-            <p style="font-size:10pt; margin: 0; padding: 0;">Programming Languages: Python, JavaScript, Java | Frameworks: React, Django | Tools: Git, Docker</p>
-
-            9. **Content Guidelines:**
-            - Use active voice and action verbs throughout
-            - Emphasize quantifiable achievements (numbers, percentages, metrics)
-            - Tailor content to match job description keywords and requirements
-            - Do not fabricate skills, positions, or achievements
-            - Keep to one page if possible (prioritize most relevant content)
-            - Use consistent date format: "Month Year" (e.g., "September 2020")
-            - Avoid personal pronouns (I, me, my)
-            - No abbreviations unless standard (e.g., "USA" is fine, but spell out company names)
-
-            10. **Matching Score:**
-            - Estimate a matching score (0-100) between the job description and candidate CV.
-            - Include it as an HTML comment **at the very end** of the HTML fragment like this:
-            <!-- MATCHING_SCORE: 87 -->
-            - Do not include the score anywhere else in the HTML.
-
-            11. **Output Restrictions:**
-            - Return **only the HTML fragment** following Harvard Style format above.
-            - Sections MUST be in this order: Contact → Education → Experience → Leadership & Activities → Skills
-            - Do not include explanations, placeholders, or extra text.
-            - Ensure clean, professional appearance suitable for PDF conversion.
-            """
+        return self._render_prompt(
+            "tailor_resume",
+            job_description=job_description,
+            cv_text=cv_text,
         )
-        return prompt
 
 
     def generate_cover_letter(
@@ -179,39 +99,12 @@ class ChatManager:
                                             job_description: str, 
                                             max_length_words: Optional[int] = 350
                                             ) -> str:
-        prompt = f"""
-        You are an expert career writer. Given a short candidate CV summary and a job description, produce a single, professional, first-person cover letter tailored to the job.
-
-        Job description:
-        {job_description}
-
-        Candidate summarized CV (plain text):
-        {cv_text}
-
-        Requirements and instructions:
-        - The cover letter MUST start exactly with: "Dear Recruiter," as the very first line.
-        - Format requirements to ensure PDF converts paragraphs correctly:
-          * Wrap the entire cover letter in a single wrapper element only: <div style="font-size:10pt;">...HTML content...</div>
-          * Inside that single wrapper, use explicit paragraph tags for separation. Specifically:
-        - Put "Dear Recruiter," in its own paragraph: <p>Dear Recruiter,</p>
-        - Use 2-3 short paragraphs for the body, each enclosed in its own <p>...</p>.
-        - Place the sign-off block in a separate paragraph tag after the closing paragraph. The sign-off paragraph should contain:
-          Best regards,<br>
-          &lt;Full Name&gt;
-          where &lt;Full Name&gt; is the candidate's name from the CV summary (field 'name') or "Candidate" if absent.
-          * Do NOT omit paragraph tags or rely only on line breaks; paragraph tags are required so PDF renderers keep separate blocks.
-          * Do not add any other wrapper elements or surrounding metadata outside the single <div> wrapper.
-        - Structure the letter content into 2-3 short paragraphs:
-          1) Opening: 1-2 sentences showing interest and fit.
-          2) Body: 2-3 sentences linking specific achievements/skills from the CV summary to the job requirements.
-          3) Closing: 1-2 sentences with a call-to-action.
-        - Use a professional, confident tone in first-person. Do NOT mention the company by name.
-        - Naturally include 3-8 relevant keywords/skills from the job description within the letter.
-        - Do NOT fabricate experience, skills, metrics, or facts not present in the CV summary. Rephrase and prioritize only what aligns with the job.
-        - Keep the letter to at most {max_length_words} words.
-        - Return ONLY the cover letter as the single HTML string described above (the <div> wrapper containing inner <p> paragraphs and the sign-off). Do NOT include any analysis, JSON, headers, labels, explanations, or any extra text before or after the HTML. Return nothing else.
-        """
-        return prompt
+        return self._render_prompt(
+            "cover_letter",
+            job_description=job_description,
+            cv_text=cv_text,
+            max_length_words=max_length_words,
+        )
 
 
     def summarize_resume(self,
@@ -225,46 +118,10 @@ class ChatManager:
     
 
     def _build_summarize_resume_prompt(self, resume_text: str) -> str:
-        schema = """
-        Produce a single valid JSON object that matches the following schema exactly.
-        Do not invent accomplishments or metrics; if a fact is not present, use null, empty list, or empty string.
-        Return only the JSON object and nothing else.
-        {
-        "profile": {
-            "name": "<string|null>",
-            "email": "<string|null>",
-            "phone": "<string|null>",
-            "location": "<string|null>",
-            "title": "<string|null>",
-            "one_line_summary": "<string|null>",
-            "years_experience": <number|null>
-        },
-        "skills": {
-            "languages": [<strings>],
-            "frameworks": [<strings>],
-            "infra": [<strings>],
-            "other": [<strings>]
-        },
-        "experience": [
-            {
-            "role": "<string|null>",
-            "company": "<string|null>",
-            "start": "<YYYY-MM|null>",
-            "end": "<YYYY-MM|null>",
-            "bullets": [<strings>],
-            "metrics": <object|null>
-            }
-        ],
-        "education": [<strings>],
-        "projects": [{"name":"<string>","desc":"<string>","link":"<string|null>"}],
-        "keywords": [<strings>],
-        "availability": "<string|null>",
-        "notes": "<string|null>"
-        }
-        """
-        prompt = f"{schema}\n\nResume:\n{resume_text}\n\nReturn only the JSON object."
-        return prompt
+        return self._render_prompt(
+            "summarize_resume",
+            resume_text=resume_text,
+        )
 
 
 chat_manager = ChatManager()
-

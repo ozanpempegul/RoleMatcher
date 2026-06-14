@@ -8,6 +8,7 @@ import subprocess
 from pathlib import Path
 from docx import Document
 from common.imports.log import*
+from common.paths import bundle_root, summaries_dir, tailored_resumes_dir
 from PySide6.QtCore import Signal, QThread
 from xhtml2pdf import pisa  # type: ignore
 from models.job import Job
@@ -16,7 +17,6 @@ from models.job import Job
 class FileManager(QThread):
 
     signal_last_summary_json_loaded = Signal(dict)
-    _PROJECT_ROOT = Path(__file__).resolve().parent.parent
     _COVER_LETTER_FILENAME = "Cover Letter.pdf"
 
     def __init__(self):
@@ -41,41 +41,31 @@ class FileManager(QThread):
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         filename = f"{timestamp}.json"
 
-        os.makedirs("summaries", exist_ok=True)
+        summaries_path = summaries_dir()
+        summaries_path.mkdir(parents=True, exist_ok=True)
         if not filename:
             filename = f"{uuid.uuid4()}.json"
         if not filename.endswith(".json"):
             filename += ".json"
-        path = os.path.join("summaries", filename)
+        path = summaries_path / filename
 
         obj = json.loads(summary_json_str)
         with open(path, "w", encoding="utf-8") as f:
             json.dump(obj, f, ensure_ascii=False, indent=2)
 
         self._load_last_summary_json()
-        return path
+        return str(path)
     
 
     def _find_last_summary_path(self):
-        cwd = Path.cwd()
-        module_dir = Path(__file__).resolve().parent
-
-        search_roots = []
-        for p in [cwd, *cwd.parents, module_dir, *module_dir.parents]:
-            if p not in search_roots:
-                search_roots.append(p)
-
-        for root in search_roots:
-            summaries_dir = root / "summaries"
-            if summaries_dir.is_dir():
-                json_files = [f for f in summaries_dir.iterdir() if f.is_file() and f.suffix.lower() == ".json"]
-                if not json_files:
-                    return None
-                json_files.sort(key=lambda p: p.name)
-                _path = str(json_files[-1])
-                return _path
-
-        return None
+        summaries_path = summaries_dir()
+        if not summaries_path.is_dir():
+            return None
+        json_files = [f for f in summaries_path.iterdir() if f.is_file() and f.suffix.lower() == ".json"]
+        if not json_files:
+            return None
+        json_files.sort(key=lambda p: p.name)
+        return str(json_files[-1])
     
 
     def _load_last_summary_json(self) -> dict | None:
@@ -105,7 +95,7 @@ class FileManager(QThread):
 
 
     def get_job_output_folder_path(self, job: Job) -> Path:
-        return self._PROJECT_ROOT / self._tailored_resume_folder_name / self._job_folder_name(job)
+        return tailored_resumes_dir() / self._job_folder_name(job)
 
 
     def get_job_cover_letter_path(self, job: Job) -> Path:
@@ -196,13 +186,17 @@ body, div {
         
         full_text = font_style+text
 
-        os.makedirs(self._PROJECT_ROOT / self._tailored_resume_folder_name, exist_ok=True)
+        tailored_resumes_dir().mkdir(parents=True, exist_ok=True)
         _path = self.get_job_cover_letter_path(job)
 
         os.makedirs(_path.parent, exist_ok=True)
         with open(_path, "wb") as out_f:
             # CreatePDF returns a pisaStatus object with .err attribute
-            pisa_status = pisa.CreatePDF(src=full_text, dest=out_f, link_callback=lambda uri, rel: os.path.join(os.getcwd(), uri))
+            pisa_status = pisa.CreatePDF(
+                src=full_text,
+                dest=out_f,
+                link_callback=lambda uri, rel: str(bundle_root() / uri),
+            )
             if getattr(pisa_status, "err", None):
                 # try to include any available log/message for easier debugging
                 log = getattr(pisa_status, "log", None)
@@ -213,4 +207,3 @@ body, div {
     
 
 file_manager = FileManager()
-

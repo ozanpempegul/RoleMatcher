@@ -1,19 +1,29 @@
 # db_manager.py
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import IntegrityError
+from dotenv import load_dotenv, find_dotenv, dotenv_values
 from common.imports.log import *
 import os
+from models.base import Base
 from models.job import Job, Sites
 from models.job_match_score import JobMatchScore
 from PySide6.QtCore import Signal, QObject
 from pathlib import Path
+from common.paths import app_data_dir, default_db_path
 
 
+load_dotenv(override=True)
+
+_env_file_values = dotenv_values(find_dotenv())
 
 USE_SQLITE_FLAG = os.getenv("USE_SQLITE", "False").lower() in ("true")
-_PROJECT_ROOT = Path(__file__).resolve().parent.parent
-SQLITE_DB_PATH = os.getenv("SQLITE_DB_PATH", str(_PROJECT_ROOT / "job_alerts.db"))
+sqlite_db_path_env = (_env_file_values.get("SQLITE_DB_PATH") or "").strip()
+if sqlite_db_path_env:
+    SQLITE_DB_PATH = sqlite_db_path_env
+else:
+    app_data_dir().mkdir(parents=True, exist_ok=True)
+    SQLITE_DB_PATH = str(default_db_path())
 POSTGRES_CONFIG_PRESENT = all(os.getenv(k) for k in ("POSTGRES_DB","POSTGRES_USER","POSTGRES_PASSWORD","POSTGRES_HOST","POSTGRES_PORT"))
 
 
@@ -31,7 +41,12 @@ def _choose_db_url():
 
 
 SQLALCHEMY_DATABASE_URL, _USE_SQLITE = _choose_db_url()
-Base = declarative_base()
+if _USE_SQLITE:
+    logging.info(f"Using SQLite database: {SQLITE_DB_PATH}")
+
+
+def _ensure_schema(engine) -> None:
+    Base.metadata.create_all(bind=engine)
 
 
 def _make_engine(**engine_kwargs):
@@ -57,15 +72,14 @@ site_map = {
 
 
 
-# python
 class DBManager(QObject):
     signal_data_saved = Signal()
 
 
     def __init__(self):
         super().__init__()
-        # pass engine options as kwargs to _make_engine
         self.engine = _make_engine(pool_size=10, max_overflow=20)
+        _ensure_schema(self.engine)
         self.SessionLocal = sessionmaker(bind=self.engine, autoflush=False, autocommit=False)
 
 

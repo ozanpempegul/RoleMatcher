@@ -5,6 +5,7 @@ from alembic import context
 import os
 from dotenv import load_dotenv
 from models import Base
+from common.paths import app_data_dir, default_db_path
 
 
 # Load .env variables
@@ -14,7 +15,11 @@ load_dotenv()
 use_sqlite = os.getenv("USE_SQLITE", "").strip().lower() in ("true")
 sqlite_path = os.getenv("SQLITE_DB_PATH", "").strip()
 if use_sqlite or sqlite_path:
-    sqlite_file = sqlite_path or "./job_alerts.db"
+    if sqlite_path:
+        sqlite_file = sqlite_path
+    else:
+        app_data_dir().mkdir(parents=True, exist_ok=True)
+        sqlite_file = str(default_db_path())
     sqlalchemy_url = f"sqlite:///{os.path.abspath(sqlite_file)}"
 else:
     DB_USER = os.getenv("POSTGRES_USER")

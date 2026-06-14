@@ -1,11 +1,10 @@
 import logging
 import sys
 from logging.handlers import RotatingFileHandler
-from pathlib import Path
 
-_PROJECT_ROOT = Path(__file__).resolve().parents[2]
-_LOGS_DIR = _PROJECT_ROOT / "logs"
-_LOG_FILE = _LOGS_DIR / "job_alerts.log"
+from common.paths import logs_dir
+
+_LOG_FILE = logs_dir() / "job_alerts.log"
 _LOG_FORMAT = "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
 
 
@@ -14,7 +13,7 @@ def _setup_logging() -> None:
     if root.handlers:
         return
 
-    _LOGS_DIR.mkdir(parents=True, exist_ok=True)
+    logs_dir().mkdir(parents=True, exist_ok=True)
 
     formatter = logging.Formatter(_LOG_FORMAT)
 

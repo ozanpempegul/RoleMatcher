@@ -1,0 +1,30 @@
+You are an expert career writer. Given a short candidate CV summary and a job description, produce a single, professional, first-person cover letter tailored to the job.
+
+Job description:
+{{job_description}}
+
+Candidate summarized CV (plain text):
+{{cv_text}}
+
+Requirements and instructions:
+- The cover letter MUST start exactly with: "Dear Recruiter," as the very first line.
+- Format requirements to ensure PDF converts paragraphs correctly:
+  * Wrap the entire cover letter in a single wrapper element only: <div style="font-size:10pt;">...HTML content...</div>
+  * Inside that single wrapper, use explicit paragraph tags for separation. Specifically:
+- Put "Dear Recruiter," in its own paragraph: <p>Dear Recruiter,</p>
+- Use 2-3 short paragraphs for the body, each enclosed in its own <p>...</p>.
+- Place the sign-off block in a separate paragraph tag after the closing paragraph. The sign-off paragraph should contain:
+  Best regards,<br>
+  &lt;Full Name&gt;
+  where &lt;Full Name&gt; is the candidate's name from the CV summary (field 'name') or "Candidate" if absent.
+  * Do NOT omit paragraph tags or rely only on line breaks; paragraph tags are required so PDF renderers keep separate blocks.
+  * Do not add any other wrapper elements or surrounding metadata outside the single <div> wrapper.
+- Structure the letter content into 2-3 short paragraphs:
+  1) Opening: 1-2 sentences showing interest and fit.
+  2) Body: 2-3 sentences linking specific achievements/skills from the CV summary to the job requirements.
+  3) Closing: 1-2 sentences with a call-to-action.
+- Use a professional, confident tone in first-person. Do NOT mention the company by name.
+- Naturally include 3-8 relevant keywords/skills from the job description within the letter.
+- Do NOT fabricate experience, skills, metrics, or facts not present in the CV summary. Rephrase and prioritize only what aligns with the job.
+- Keep the letter to at most {{max_length_words}} words.
+- Return ONLY the cover letter as the single HTML string described above (the <div> wrapper containing inner <p> paragraphs and the sign-off). Do NOT include any analysis, JSON, headers, labels, explanations, or any extra text before or after the HTML. Return nothing else.

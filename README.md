@@ -50,10 +50,12 @@ DB_PASSWORD=your_database_password
 DB_NAME=your_database_name
 
 USE_SQLITE=True
-SQLITE_DB_PATH=./job_alerts.db
 
-API_KEY = "YOUR_HASDATA_API_KEY"
-base_url = "https://api.hasdata.com/scrape/indeed/listing"
+# Optional override. If omitted, the database is stored at:
+# %LOCALAPPDATA%\job_alerts\job_alerts.db
+
+OPENAI_API_KEY=your_openai_api_key
+OPENAI_MODEL=gpt-5-mini
 ```
 
 Replace each value with your actual database and api details. This file should not be committed to version control; add `.env` to your `.gitignore` file.
@@ -92,3 +94,23 @@ Compile the .qrc to a Python module:
 - PySide6:
 ```bash
 pyside6-rcc resources.qrc -o resources_rc.py
+```
+
+-------------------------------
+
+## Packaging (PyInstaller / Inno Setup)
+
+When building a standalone installer, include the read-only `prompts/` folder in the app bundle. The app loads prompt templates from that folder at runtime and will fail if it is missing from the packaged build.
+
+Runtime data is stored outside the bundle:
+
+| Data | Location |
+|------|----------|
+| Logs | `logs/` next to the running app (exe folder when installed) |
+| Summaries | `summaries/` next to the running app |
+| Tailored resumes / cover letters | `tailored_resumes/` next to the running app |
+| SQLite database | `%LOCALAPPDATA%\job_alerts\job_alerts.db` |
+
+When running from source, logs, summaries, and tailored resumes are created relative to the current working directory instead.
+
+**Important:** Bundle `prompts/` with PyInstaller (for example via `--add-data "prompts;prompts"`) and include the same folder in your Inno Setup installer next to the executable or inside the PyInstaller bundle.

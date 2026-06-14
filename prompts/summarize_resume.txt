@@ -1,0 +1,40 @@
+Produce a single valid JSON object that matches the following schema exactly.
+Do not invent accomplishments or metrics; if a fact is not present, use null, empty list, or empty string.
+Return only the JSON object and nothing else.
+{
+"profile": {
+    "name": "<string|null>",
+    "email": "<string|null>",
+    "phone": "<string|null>",
+    "location": "<string|null>",
+    "title": "<string|null>",
+    "one_line_summary": "<string|null>",
+    "years_experience": <number|null>
+},
+"skills": {
+    "languages": [<strings>],
+    "frameworks": [<strings>],
+    "infra": [<strings>],
+    "other": [<strings>]
+},
+"experience": [
+    {
+    "role": "<string|null>",
+    "company": "<string|null>",
+    "start": "<YYYY-MM|null>",
+    "end": "<YYYY-MM|null>",
+    "bullets": [<strings>],
+    "metrics": <object|null>
+    }
+],
+"education": [<strings>],
+"projects": [{"name":"<string>","desc":"<string>","link":"<string|null>"}],
+"keywords": [<strings>],
+"availability": "<string|null>",
+"notes": "<string|null>"
+}
+
+Resume:
+{{resume_text}}
+
+Return only the JSON object.
