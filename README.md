@@ -72,7 +72,7 @@ OPENAI_MODEL=gpt-5-mini
 
 ### PostgreSQL (optional)
 
-Omit `USE_SQLITE` or set `USE_SQLITE=False`, then provide PostgreSQL credentials:
+Set `USE_SQLITE=False`, then provide PostgreSQL credentials:
 
 ```
 USE_SQLITE=False
