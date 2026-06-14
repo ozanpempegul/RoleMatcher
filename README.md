@@ -40,25 +40,54 @@ pip install -r requirements.txt
 -------------------------------
 
 ## Create .env file
-To store your database credentials securely, create a `.env` file in your project's root directory. Add your database information in the following format:
+
+Create a `.env` file in the project root. Do not commit it; `.env` is already in `.gitignore`.
+
+### SQLite (default)
+
+Set `USE_SQLITE=True` and add your OpenAI settings. PostgreSQL variables are not required.
 
 ```
-DB_HOST=your_database_host
-DB_PORT=your_database_port
-DB_USER=your_database_user
-DB_PASSWORD=your_database_password
-DB_NAME=your_database_name
-
 USE_SQLITE=True
-
-# Optional override. If omitted, the database is stored at:
-# %LOCALAPPDATA%\RoleMatcher\RoleMatcher.db
 
 OPENAI_API_KEY=your_openai_api_key
 OPENAI_MODEL=gpt-5-mini
 ```
 
-Replace each value with your actual database and api details. This file should not be committed to version control; add `.env` to your `.gitignore` file.
+By default the database is stored at:
+
+```
+%LOCALAPPDATA%\RoleMatcher\RoleMatcher.db
+```
+
+To use a different SQLite file, add `SQLITE_DB_PATH` to `.env`:
+
+```
+USE_SQLITE=True
+SQLITE_DB_PATH=C:\Users\you\data\RoleMatcher.db
+
+OPENAI_API_KEY=your_openai_api_key
+OPENAI_MODEL=gpt-5-mini
+```
+
+### PostgreSQL (optional)
+
+Omit `USE_SQLITE` or set `USE_SQLITE=False`, then provide PostgreSQL credentials:
+
+```
+USE_SQLITE=False
+
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_USER=your_database_user
+POSTGRES_PASSWORD=your_database_password
+POSTGRES_DB=your_database_name
+
+OPENAI_API_KEY=your_openai_api_key
+OPENAI_MODEL=gpt-5-mini
+```
+
+Replace each placeholder with your actual values.
 
 ## Database Migrations
 
