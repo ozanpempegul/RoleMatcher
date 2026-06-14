@@ -4,7 +4,7 @@ from logging.handlers import RotatingFileHandler
 
 from common.paths import logs_dir
 
-_LOG_FILE = logs_dir() / "job_alerts.log"
+_LOG_FILE = logs_dir() / "RoleMatcher.log"
 _LOG_FORMAT = "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
 
 

@@ -43,6 +43,7 @@ build/
 dist/
 *.egg-info/
 .eggs/
+*.spec
 
 # Backup files
 *.bak

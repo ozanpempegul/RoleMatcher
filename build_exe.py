@@ -19,7 +19,7 @@ def main() -> None:
             "--windowed",
             "--onedir",
             "--name",
-            "JobAlerts",
+            "RoleMatcher",
             "--add-data",
             f"{prompts}{os.pathsep}prompts",
             "--collect-all",

@@ -27,8 +27,8 @@ def app_data_dir() -> Path:
     """Persistent user data directory for the installed app."""
     local_app_data = os.environ.get("LOCALAPPDATA")
     if local_app_data:
-        return Path(local_app_data) / "job_alerts"
-    return Path.home() / "AppData" / "Local" / "job_alerts"
+        return Path(local_app_data) / "RoleMatcher"
+    return Path.home() / "AppData" / "Local" / "RoleMatcher"
 
 
 def logs_dir() -> Path:
@@ -48,4 +48,4 @@ def prompts_dir() -> Path:
 
 
 def default_db_path() -> Path:
-    return app_data_dir() / "job_alerts.db"
+    return app_data_dir() / "RoleMatcher.db"

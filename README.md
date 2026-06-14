@@ -1,4 +1,4 @@
-# job_alerts
+# RoleMatcher
 
 -------------------------------
 
@@ -52,7 +52,7 @@ DB_NAME=your_database_name
 USE_SQLITE=True
 
 # Optional override. If omitted, the database is stored at:
-# %LOCALAPPDATA%\job_alerts\job_alerts.db
+# %LOCALAPPDATA%\RoleMatcher\RoleMatcher.db
 
 OPENAI_API_KEY=your_openai_api_key
 OPENAI_MODEL=gpt-5-mini
@@ -109,7 +109,7 @@ Runtime data is stored outside the bundle:
 | Logs | `logs/` next to the running app (exe folder when installed) |
 | Summaries | `summaries/` next to the running app |
 | Tailored resumes / cover letters | `tailored_resumes/` next to the running app |
-| SQLite database | `%LOCALAPPDATA%\job_alerts\job_alerts.db` |
+| SQLite database | `%LOCALAPPDATA%\RoleMatcher\RoleMatcher.db` |
 
 When running from source, logs, summaries, and tailored resumes are created relative to the current working directory instead.
 
