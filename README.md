@@ -91,29 +91,30 @@ Replace each placeholder with your actual values.
 
 ## Database Migrations
 
-To initialize Alembic in your project, run:
+Alembic works with **both SQLite and PostgreSQL**. It reads the same `.env` settings as the app (`USE_SQLITE`, `SQLITE_DB_PATH`, or `POSTGRES_*`).
 
-```bash
-alembic init alembic
-```
+**SQLite (default):** You do not need to run migrations to use the app. On startup, the app creates the schema automatically. Run Alembic only if you are developing schema changes or want to apply existing migration history to a fresh database file.
 
-To create a new migration version, run:
+**PostgreSQL:** Run migrations to create and update the schema.
 
-```bash
-alembic revision --autogenerate -m "your message here"
-```
-
-To apply migrations and upgrade the database, run:
+Alembic is already set up in this repo. To apply migrations:
 
 ```bash
 alembic upgrade head
 ```
 
-To downgrade the database to a previous migration, run:
+To create a new migration version (development):
+
+```bash
+alembic revision --autogenerate -m "your message here"
+```
+
+To downgrade the database to a previous migration:
 
 ```bash
 alembic downgrade <revision>
 ```
+
 Replace `<revision>` with the target revision identifier (e.g., `-1` for one step back).
 
 -------------------------------
